@@ -1,10 +1,71 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $groupname = $_POST['groupname'];
+
+  if (!empty($groupname)) {
+    $servername = "mysql_db";
+    $username = "root";
+    $password = "root";
+    $database = "ashii";
+
+
+    // create connection
+    $conn = new mysqli($servername, $username, $password, $database);
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
+
+    // check connection
+    if (mysqli_connect_error()) {
+      die('connect error (' . mysqli_connect_error() . ')' . mysqli_connect_error());
+    } else {
+      $SELECT = "SELECT groupname FROM `groups` WHERE groupname = ? LIMIT 1";
+      $INSERT = "INSERT Into `groups` (groupname) values(?)";
+
+
+
+
+      // prepare statment
+      $stmt = $conn->prepare($SELECT);
+      $stmt->bind_param("s", $groupname);
+      $stmt->execute();
+      $stmt->bind_result($groupname);
+      $stmt->store_result();
+      $rnum = $stmt->num_rows;
+      // echo $SELECT;
+
+      if ($rnum == 0) {
+        $stmt->close();
+
+        $stmt = $conn->prepare($INSERT);
+        $stmt->bind_param("s", $groupname);
+        $stmt->execute();
+        echo '<center>';
+        echo "new group created sucessfully";
+      } else {
+        echo '<center>';
+        "someone already created using this group name";
+        
+      }
+      $stmt->close();
+      $conn->close();
+    }
+  } else {
+    echo "All field are required";
+    die();
+  }
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ashii</title>
+  <title>Group</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
   <style>
     body {
       background-color: #afd2ee;
@@ -55,7 +116,7 @@
 
     .card {
       position: absolute;
-      top: 0;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #fff;
@@ -239,13 +300,124 @@
       color: black;
     }
   </style>
+  <script>
+    function toggleDarkMode() {
+      var body = document.querySelector('body');
+      body.classList.toggle('dark-mode');
+
+      // Store the dark mode preference in localStorage
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        localStorage.setItem('darkMode', 'false');
+      }
+    }
+
+    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      var body = document.querySelector('body');
+      var darkMode = localStorage.getItem('darkMode');
+
+      if (darkMode === 'true') {
+        body.classList.add('dark-mode');
+      }
+    });
+
+
+    function openSettings() {
+      var settingsPage = document.querySelector('.settings-page');
+      settingsPage.style.display = 'block';
+    }
+
+    function closeSettings() {
+      var settingsPage = document.querySelector('.settings-page');
+      settingsPage.style.display = 'none';
+    }
+
+    function search() {
+      const searchFun = () =>{
+        let filter = document.getElementById('myInput').value.toUpperCase();    
+        let mytable = document.getElementById('mytable');
+        let tr = mytable.getElementsByTagName('tr');
+
+        for(var i=0; i<tr.length; i++){
+          let td = tr[i].getElementsByTagName('td')[1];
+
+          if(td){
+            let textvalue = td.textContent || td.innerHTML;
+
+            if(textvalue.toUpperCase().indexOf(filter) > -1){
+               tr[i].style.display = "";
+            }else{
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    }
+      // var searchInput = document.getElementById('myinput').value;
+      // console.log("Search input:", searchInput);
+      // Perform search operation with the input value
+    // }
+    
+    function clearSearch() {
+  var input = document.getElementById('myInput');
+  var tr = document.getElementsByTagName('tr');
+  input.value = ''; // Clear the input value
+
+  // Display all table rows
+  for (var i = 0; i < tr.length; i++) {
+    tr[i].style.display = "";
+  }
+}
+
+
+    function showAddGroupForm() {
+      var addGroupForm = document.querySelector('.add-group-form');
+      addGroupForm.style.display = 'block';
+    }
+
+    function backspace() {
+      var addGroupForm = document.querySelector('.add-group-form');
+      addGroupForm.style.display = 'none';
+    }
+  </script>
+
 </head>
 
 <body>
+  <button class="settings-button" onclick="openSettings()">Settings</button>
+
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">
+          <h2>Welcome To My Data</h2>
+          <hr>
+          <div class="search-container">
+            <span class="close-button" onclick="clearSearch()">&times;</span>
+            <input type="text" id="myInput"  name="search" placeholder="Search" class="form-control search-input" onkeyup="searchFun()">
+            <button onclick="searchFun()" class="btn btn-primary search-button" >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+
+
+
+
+
+          <div class="add-group-form">
+
+            <form method="POST" action="">
+              <input type="text" name="groupname" placeholder="Group Name" required class="form-control"><br>
+              <input type="submit" class="btn btn-primary" value="Create">&nbsp;
+              <button onclick="backspace()" class="btn btn-secondary">Back</button>
+            </form>
+          </div>
+
+          <button onclick="showAddGroupForm()" class="btn btn-primary add-group">+ Add Group</button>
+          <br>
+          <h3>My Data Groups</h3>
           <div class="container">
             <div class="search-container">
               <table class="table" id="mytable">
@@ -289,6 +461,7 @@
 
                   }
 
+
                   ?>
                 </tbody>
               </table>
@@ -298,6 +471,35 @@
       </div>
     </div>
   </div>
+
+  <div class="settings-page" style="display: none;">
+    <span class="close-button" onclick="closeSettings()">&times;</span>
+    <h2>Settings</h2>
+    <ul>
+      <li>
+        <label>
+          <input type="checkbox" name="darkMode" onclick="toggleDarkMode()"> Dark Mode
+        </label>
+
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" name="notifications"> Notifications
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" name="privacy"> Privacy
+        </label>
+      </li>
+    </ul>
+    <button onclick="closeSettings()" class="btn btn-secondary">Close</button>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
