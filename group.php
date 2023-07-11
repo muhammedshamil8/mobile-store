@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $groupname = $_POST['groupname'];
 
@@ -8,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = "root";
     $database = "ashii";
 
-
     // create connection
     $conn = new mysqli($servername, $username, $password, $database);
     if ($conn->connect_error) {
@@ -17,22 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // check connection
     if (mysqli_connect_error()) {
-      die('connect error (' . mysqli_connect_error() . ')' . mysqli_connect_error());
+      die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
     } else {
       $SELECT = "SELECT groupname FROM `groups` WHERE groupname = ? LIMIT 1";
       $INSERT = "INSERT Into `groups` (groupname) values(?)";
 
-
-
-
-      // prepare statment
+      // prepare statement
       $stmt = $conn->prepare($SELECT);
       $stmt->bind_param("s", $groupname);
       $stmt->execute();
       $stmt->bind_result($groupname);
       $stmt->store_result();
       $rnum = $stmt->num_rows;
-      // echo $SELECT;
 
       if ($rnum == 0) {
         $stmt->close();
@@ -40,267 +37,412 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare($INSERT);
         $stmt->bind_param("s", $groupname);
         $stmt->execute();
-        echo '<center>';
-        echo "new group created sucessfully";
+        $message = "New group created successfully";
       } else {
-        echo '<center>';
-        "someone already created using this group name";
-        
+        $message = "Someone has already created a group with this name";
       }
       $stmt->close();
       $conn->close();
     }
   } else {
-    echo "All field are required";
-    die();
+    $message = "All fields are required";
   }
 }
+
+$groupname = $_GET['gn'];
+
+if (!empty($groupname)) {
+  $servername = "mysql_db";
+  $username = "root";
+  $password = "root";
+  $database = "ashii";
+
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $database);
+
+  // Check connection
+  if (mysqli_connect_error()) {
+    die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
+  } else {
+    $query = "DELETE FROM `groups` WHERE groupname = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $groupname);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+      $deleteMessage = "Group deleted from the database";
+    } else {
+      $deleteMessage = "Failed to delete group from the database";
+    }
+
+    $stmt->close();
+    $conn->close();
+  }
+}
+
+// Retrieve all groups
+$servername = "mysql_db";
+$username = "root";
+$password = "root";
+$database = "ashii";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM `groups`";
+$result = $conn->query($sql);
+
+$groupNames = array();
+
+if ($result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $groupNames[] = $row["groupname"];
+  }
+}
+
+$conn->close();
 ?>
+
+
 <!DOCTYPE html>
 <html>
 
 <head>
-  <title>Group</title>
+<title>Group</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
-
   <style>
-    body {
-      background-color: #afd2ee;
-      transition: background-color 0.3s, color 0.3s;
-      margin: 0;
-      padding: 0;
-    }
+  body {
+    font-size: 20px;
+    background-color: #afd2ee;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0;
+    padding: 0;
+  }
 
-    body.dark-mode {
-      background-color: #212121;
-      color: #ffffff;
-    }
+  body.dark-mode {
+    background-color: #212121;
+    color: #ffffff;
+  }
 
-    input:checked+.slider {
-      background-color: #2196F3;
-    }
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
 
-    input:focus+.slider {
-      box-shadow: 0 0 1px #2196F3;
-    }
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
 
-    input:checked+.slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
 
-    .settings-button {
-      position: absolute;
-      top: 20px;
-      left: 8px;
-      background-color: #2196F3;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      z-index: 9999;
-    }
+  .settings-button {
+    position: absolute;
+    top: 20px;
+    right: 8px;
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 20px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 9999;
+  }
 
+  .settings-button:hover {
+    background-color: #0077C2;
+  }
 
+  .card {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    width: 800px;
 
-    .settings-button:hover {
-      background-color: #0077C2;
-    }
+  }
 
+  .add-group {
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+
+  }
+  .add-group:hover {
+    background-color: #0077C2;
+  }
+  .add-group-form {
+    display: none;
+    text-align: center;
+    padding: 30px;
+  }
+  .add-group-form input[type="text"],
+  .add-group-form input[type="submit"],
+  .add-group-form button {
+    font-size: 24px; /* Increase the font size for the input field, create button, and back button */
+    padding: 12px 24px; /* Increase the padding for the input field, create button, and back button */
+    margin-bottom: 10px; /* Add some spacing between the elements */
+    width: 400px; /* Adjust the width value as per your requirement */
+  }
+  
+
+  /* Media queries for different screen sizes */
+  @media (max-width: 480px) {
     .card {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 50px;
-      text-align: center;
-    }
-
-    .add-group {
-      background-color: #2196F3;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 50px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 20px;
-    }
-
-    .add-group:hover {
-      background-color: #0077C2;
-    }
-
-    /* Media queries for different screen sizes */
-    @media (max-width: 480px) {
-      .card {
-        padding: 20px;
-      }
-    }
-
-    @media (min-width: 481px) and (max-width: 768px) {
-      .card {
-        padding: 30px;
-      }
-    }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .card {
-        padding: 40px;
-      }
-    }
-
-    @media (min-width: 1025px) {
-      .card {
-        padding: 50px;
-      }
-    }
-
-    .settings-page {
-      position: absolute;
-      top: 60px;
-      left: 20px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: #fff;
-      border-radius: 5px;
-      padding: 20px;
-      text-align: center;
-      z-index: 9999;
-    }
-
-    .settings-page h2 {
-      margin-top: 0;
-    }
-
-    .settings-page ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .settings-page li {
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .settings-page li input[type="checkbox"] {
-      margin-right: 5px;
-    }
-
-    .settings-page button {
-      background-color: #2196F3;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 20px;
-    }
-
-    .settings-page button:hover {
-      background-color: #0077C2;
-    }
-
-    .settings-page .close-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 18px;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .search-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .search-input {
-      flex: 1;
-      margin-right: 10px;
       padding: 10px;
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    .card {
+      padding: 15px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .card {
+      padding: 25px;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .card {
+      padding: 40px;
+    }
+  }
+
+  .settings-page {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 8px;
+    padding: 100px;
+    text-align: center;
+    z-index: 9999;
+  }
+
+  .settings-page h2 {
+    margin-top: 0;
+    font-size: 40px;
+  }
+
+  .settings-page ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 30px;
+  }
+
+  .settings-page li {
+    margin-bottom: 30px;
+    display: block;
+  }
+
+  .settings-page li input[type="checkbox"] {
+    margin-right: 15px;
+    transform: scale(2.5);
+  }
+
+  .settings-page button {
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+  }
+
+  .settings-page button:hover {
+    background-color: #0077C2;
+  }
+
+  .settings-page .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .search-input {
+    flex: 1;
+      margin-right: 10px;
+      padding: 16px 32px; 
       border: none;
       border-radius: 5px;
-      font-size: 16px;
-    }
+      font-size: 28px; 
+      width: 600px; 
+    
+  }
 
-    .close-button {
-      position: absolute;
-      top: 50%;
-      right: 50px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      padding: 5px;
-      color: red;
-    }
+  .close-button {
+    position: absolute;
+    top: 50%;
+    right: 90px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 5px;
+    color: red;
+    font-size: 50px;
+  }
 
+  .search-button {
+    height: 60px;
+    padding: 15px 30px;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 24px;
+    color: #fff;
+  }
 
-    .search-button {
-      height: 38px;
-      padding: 8px 15px;
-      background-color: #2196F3;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-size: 16px;
-      color: #fff;
-    }
+  .search-button:hover {
+    background-color: #0077C2;
+  }
 
-    .search-button:hover {
-      background-color: #0077C2;
-    }
+  .add-group-form {
+    display: none;
+  }
+  .table {
+    width: 100%;
+    font-size: 24px;
+    border-collapse: collapse;
+    margin: 20px auto;
+  }
 
-    .add-group-form {
-      display: none;
-    }
+  .table th,
+  .table td {
+    border: 4px solid #808080;
+    padding: 16px;
+    text-align: center;
+  }
 
-    .show-add-group-form .add-group-form {
-      display: block;
-    }
+  .table td {
+    background-color: #CAE7D3;
+  }
 
-    .table {
-      width: 400px;
-      border-collapse: collapse;
+  .table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
 
-    }
-
-    .table th,
-    .table td {
-      border: 3px solid #808080;
-      padding: 8px;
-      text-align: left;
-    }
-
-    .table td {
-      background-color: #CAE7D3;
-    }
-
-    .table th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
 
     .custom-link {
       text-decoration: none;
       color: black;
+      font-size: 20px;
     }
+
+    .btn-red {
+      background-color: red;
+      color: white;
+      padding: 12px 24px;
+    font-size: 24px;
+    }
+
+    .btn-red:hover {
+      background-color: darkred;
+    }
+
+    .btn-blue {
+      background-color: blue;
+      color: white;
+      padding: 12px 24px;
+    font-size: 24px;
+    }
+    
+button.return-button {
+    position: absolute;
+    top: 10px; 
+    left: 10px; 
+    padding: 20px 35px;
+    font-size: 20px;
+    background-color: #5aa4dddc;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1;
+    overflow: hidden;
+}
+
+button.return-button:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-color: #fff;
+    opacity: 0.3;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.5s ease-out;
+}
+
+button.return-button:hover:before {
+    transform: scale(1);
+}
+
+button.return-button:hover {
+    background-color: #207bc5f5;
+}
+
+button.return-button b {
+    position: relative;
+    z-index: 2;
+}
   </style>
   <script>
+
+function openSettings() {
+            var settingsPage = document.querySelector('.settings-page');
+            settingsPage.style.display = 'block';
+        }
+
+        function closeSettings() {
+            var settingsPage = document.querySelector('.settings-page');
+            settingsPage.style.display = 'none';
+        }
+
     function toggleDarkMode() {
       var body = document.querySelector('body');
       body.classList.toggle('dark-mode');
@@ -314,7 +456,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       var body = document.querySelector('body');
       var darkMode = localStorage.getItem('darkMode');
 
@@ -323,54 +465,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     });
 
+    function searchGroup() {
+      var input = document.getElementById('searchInput').value.toUpperCase();
+      var mytable = document.getElementById('mytable');
+      var tr = mytable.getElementsByTagName('tr');
 
-    function openSettings() {
-      var settingsPage = document.querySelector('.settings-page');
-      settingsPage.style.display = 'block';
-    }
+      for (var i = 0; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName('td')[1];
 
-    function closeSettings() {
-      var settingsPage = document.querySelector('.settings-page');
-      settingsPage.style.display = 'none';
-    }
+        if (td) {
+          var textvalue = td.textContent || td.innerHTML;
 
-    function search() {
-      const searchFun = () =>{
-        let filter = document.getElementById('myInput').value.toUpperCase();    
-        let mytable = document.getElementById('mytable');
-        let tr = mytable.getElementsByTagName('tr');
-
-        for(var i=0; i<tr.length; i++){
-          let td = tr[i].getElementsByTagName('td')[1];
-
-          if(td){
-            let textvalue = td.textContent || td.innerHTML;
-
-            if(textvalue.toUpperCase().indexOf(filter) > -1){
-               tr[i].style.display = "";
-            }else{
-              tr[i].style.display = "none";
-            }
+          if (textvalue.toUpperCase().indexOf(input) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
           }
         }
       }
     }
-      // var searchInput = document.getElementById('myinput').value;
-      // console.log("Search input:", searchInput);
-      // Perform search operation with the input value
-    // }
-    
+
     function clearSearch() {
-  var input = document.getElementById('myInput');
-  var tr = document.getElementsByTagName('tr');
-  input.value = ''; // Clear the input value
+      var input = document.getElementById('searchInput');
+      var tr = document.getElementsByTagName('tr');
+      input.value = ''; // Clear the input value
 
-  // Display all table rows
-  for (var i = 0; i < tr.length; i++) {
-    tr[i].style.display = "";
-  }
-}
-
+      // Display all table rows
+      for (var i = 0; i < tr.length; i++) {
+        tr[i].style.display = "";
+      }
+    }
 
     function showAddGroupForm() {
       var addGroupForm = document.querySelector('.add-group-form');
@@ -381,97 +505,107 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       var addGroupForm = document.querySelector('.add-group-form');
       addGroupForm.style.display = 'none';
     }
+
+    function confirmRemove() {
+      return confirm("Are you sure you want to remove this group?");
+    }
   </script>
 
 </head>
 
 <body>
   <button class="settings-button" onclick="openSettings()">Settings</button>
+  <button class="return-button" onclick="window.location.href = 'index.html'">Back</button>
 
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <h2>Welcome To My Data</h2>
-          <hr>
-          <div class="search-container">
-            <span class="close-button" onclick="clearSearch()">&times;</span>
-            <input type="text" id="myInput"  name="search" placeholder="Search" class="form-control search-input" onkeyup="searchFun()">
-            <button onclick="searchFun()" class="btn btn-primary search-button" >
+     <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <h2><em>Welcome To My Data</em></h2>
+                    <hr>
+                    <div class="search-container">
+                        <span class="close-button" onclick="clearSearch()">&times;</span>
+                        <input type="text" id="searchInput" name="search" placeholder="Search" class="form-control search-input"
+              onkeyup="searchGroup()">
+            <button onclick="searchGroup()" class="btn btn-primary search-button">
               <i class="fas fa-search"></i>
             </button>
           </div>
-
-
-
-
-
-          <div class="add-group-form">
-
+          <div class="add-group-form" style="display: none;">
             <form method="POST" action="">
               <input type="text" name="groupname" placeholder="Group Name" required class="form-control"><br>
               <input type="submit" class="btn btn-primary" value="Create">&nbsp;
               <button onclick="backspace()" class="btn btn-secondary">Back</button>
             </form>
-          </div>
+                    </div>
 
-          <button onclick="showAddGroupForm()" class="btn btn-primary add-group">+ Add Group</button>
+                    <button onclick="showAddGroupForm()" class="btn btn-primary add-group">+ Add Group</button>
           <br>
-          <h3>My Data Groups</h3>
+          <h3><i>My Data Groups</i></h3>
           <div class="container">
-            <div class="search-container">
-              <table class="table" id="mytable">
-                <thead class="thead-dark">
-                  <tr>
-                    <th>No:</th>
-                    <th>Group Name</th>
-                    <th>Open</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $servername = "mysql_db";
-                  $username = "root";
-                  $password = "root";
-                  $databse = "ashii";
+            <table class="table" id="mytable">
+              <thead class="thead-dark">
+                <tr>
+                  <th>No:</th>
+                  <th>Group Name</th>
+                  <th>Open</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+              <?php
+                $servername = "mysql_db";
+                $username = "root";
+                $password = "root";
+                $database = "ashii";
 
-                  // create connection
-                  $connection = new mysqli($servername, $username, $password, $databse);
+                // Create connection
+                $conn = new mysqli($servername, $username, $password, $database);
 
-                  // check connection
-                  if ($connection->connect_error) {
-                    die("connection failed: " . $connection->connect_error);
-                  }
-                  // read all row from databse table
-                  $sql = "select * from `groups`";
-                  $result = $connection->query($sql);
+                // Check connection
+                if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+                }
 
-                  if (!$result) {
-                    die("invalid query: . $connection->error");
-                  }
+                $sql = "SELECT * FROM `groups`";
+                $result = $conn->query($sql);
 
-                  // read data of each row
+
+                if ($result->num_rows > 0) {
                   while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                  <td><a href=\"product.php\" class=\"custom-link\">" . $row["id"] . "</a></td>
-                  <td><a href=\"product.php\" class=\"custom-link\">" . $row["groupname"] . "</a></td>
-                  <td><a href=\"product.php\" class=\"custom-link\"><button class=\"search-button\">open</button></a></td>
-                 </tr>";
-
-
+                      <td>" . $row["id"] . "</td>
+                      <td>" . $row["groupname"] . "</td>
+                      <td><a href=\"product.php?groupid=" . $row["id"] . "\" class=\"custom-link\"><button class=\"search-button\">open</button></a></td>
+                      <td><a href='group.php?gn=" . $row["groupname"] . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
+                    </tr>";
                   }
+                } else {
+                  echo "<tr><td colspan='4'>No groups found</td></tr>";
+                }
 
-
-                  ?>
-                </tbody>
-              </table>
-            </div>
+                $conn->close();
+                ?>
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
+          <?php
+          if (isset($message)) {
+            echo "<center><p>" . $message . "</p></center>";
+          }
 
+          if (isset($deleteMessage)) {
+            echo "<center><p>" . $deleteMessage . "</p></center>";
+          }
+          ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   <div class="settings-page" style="display: none;">
     <span class="close-button" onclick="closeSettings()">&times;</span>
     <h2>Settings</h2>

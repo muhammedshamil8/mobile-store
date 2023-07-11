@@ -1,60 +1,127 @@
 <?php
+session_start();
+
+error_reporting(0);
+
+$message = "";
+$deleteMessage = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $product_name = $_POST['product_name'];
-  $groupid = $_POST['groupid'];
+  $groupname = $_POST['groupname'];
 
-  if (!empty($product_name) || !empty($groupid)) {
+  if (!empty($product_name) && !empty($groupname)) {
     $servername = "mysql_db";
     $username = "root";
     $password = "root";
     $database = "ashii";
 
-
-    // create connection
+    // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
 
-    // check connection
+    // Check connection
     if (mysqli_connect_error()) {
-      die('connect error (' . mysqli_connect_error() . ')' . mysqli_connect_error());
+      die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
     } else {
       $SELECT = "SELECT product_name FROM device WHERE product_name = ? LIMIT 1";
-      $INSERT = "INSERT Into device (product_name,groupid) values(?,?)";
+      $INSERT = "INSERT INTO device (product_name, groupid) VALUES (?, (SELECT id FROM `groups` WHERE groupname = ?))";
 
-
-
-
-      // prepare statment
+      // Prepare statement
       $stmt = $conn->prepare($SELECT);
       $stmt->bind_param("s", $product_name);
       $stmt->execute();
-      $stmt->bind_result($product_name);
       $stmt->store_result();
       $rnum = $stmt->num_rows;
-      // echo $SELECT;
 
       if ($rnum == 0) {
         $stmt->close();
 
         $stmt = $conn->prepare($INSERT);
-        $stmt->bind_param("si", $product_name, $groupid);
+        $stmt->bind_param("ss", $product_name, $groupname);
         $stmt->execute();
-        echo '<center>';
-        echo "new product added sucessfully";
+
+        $message = "New product added successfully";
+        $_SESSION['message'] = $message;
       } else {
-        echo '<center>';
-        echo "someone already added using this product name";
-        
+        $message = "Someone has already added a product with this name";
+        $_SESSION['message'] = $message;
       }
       $stmt->close();
-      $conn->close();
     }
+    $conn->close();
   } else {
-    echo "All field are required";
-    die();
+    $message = "All fields are required";
+    $_SESSION['message'] = $message;
   }
 }
-?>
 
+$product_name = $_GET['pn'];
+
+if (!empty($product_name)) {
+  $servername = "mysql_db";
+  $username = "root";
+  $password = "root";
+  $database = "ashii";
+
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $database);
+
+  // Check connection
+  if (mysqli_connect_error()) {
+    die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
+  } else {
+    $query = "DELETE FROM device WHERE product_name = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $product_name);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+      $deleteMessage = "Record deleted from the database";
+      $_SESSION['deleteMessage'] =  $deleteMessage;
+    } else {
+      $deleteMessage = "Failed to delete record from the database";
+      $_SESSION['deleteMessage'] =  $deleteMessage;
+    }
+
+    $stmt->close();
+  }
+}
+
+$groupid = $_GET['groupid'];
+
+if (!empty($groupid)) {
+  $servername = "mysql_db";
+  $username = "root";
+  $password = "root";
+  $database = "ashii";
+
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $database);
+
+  // Check connection
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+
+  $groupQuery = "SELECT groupname FROM `groups` WHERE id = ?";
+  $stmt = $conn->prepare($groupQuery);
+  $stmt->bind_param("s", $groupid);
+  $stmt->execute();
+  $stmt->bind_result($groupname);
+  $stmt->fetch();
+  $stmt->close();
+
+  $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id ORDER BY device.id";
+  $stmt = $conn->prepare($productQuery);
+  $stmt->bind_param("s", $groupid);
+  $stmt->execute();
+  $productResult = $stmt->get_result();
+  $products = $productResult->fetch_all(MYSQLI_ASSOC);
+  $stmt->close();
+
+  $conn->close();
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -67,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <style>
     body {
+      font-size: 24px;
       background-color: #91ec7e;
       transition: background-color 0.3s, color 0.3s;
       margin: 0;
@@ -79,12 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .switch {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+      position: absolute;
+      top: 15px;
+      right: 5px;
       display: inline-block;
-      width: 60px;
-      height: 34px;
+      width: 100px;
+      height: 60px;
       z-index: 9999;
     }
 
@@ -104,16 +172,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #ccc;
       -webkit-transition: .4s;
       transition: .4s;
-      border-radius: 34px;
+      border-radius: 60px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
+      height: 50px;
+      width: 50px;
+      left: 2px;
+      bottom: 6px;
       background-color: white;
       -webkit-transition: .4s;
       transition: .3s;
@@ -129,9 +197,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     input:checked+.slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
+      -webkit-transform: translateX(45px);
+      -ms-transform: translateX(45px);
+      transform: translateX(45px);
     }
 
     .card {
@@ -142,50 +210,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 50px;
+      padding: 40px;
       text-align: center;
-    }
-    search-input
-
-    .add-group {
-      background-color: #2196F3;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 50px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 20px;
-    }
-
-    .add-group:hover {
-      background-color: #0077C2;
-    }
-
-    /* Media queries for different screen sizes */
-    @media (max-width: 480px) {
-      .card {
-        padding: 20px;
-      }
-    }
-
-    @media (min-width: 481px) and (max-width: 768px) {
-      .card {
-        padding: 30px;
-      }
-    }
-
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .card {
-        padding: 40px;
-      }
-    }
-
-    @media (min-width: 1025px) {
-      .card {
-        padding: 50px;
-      }
+      width: 800px;
     }
 
     .search-container {
@@ -198,32 +225,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .search-input {
       flex: 1;
       margin-right: 10px;
-      padding: 10px;
+      padding: 16px 32px;
       border: none;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 28px;
+      width: 600px;
     }
 
     .close-button {
       position: absolute;
       top: 50%;
-      right: 50px;
+      right: 120px;
       transform: translateY(-50%);
       cursor: pointer;
       background: red;
-      padding: 5px;
+      padding: 1px;
       color: white;
+      font-size: 40px;
     }
 
     .search-button {
-      height: 38px;
-      padding: 8px 15px;
+      height: 80px;
+      padding: 20px 40px;
       background-color: #2196F3;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background-color 0.3s;
-      font-size: 16px;
+      font-size: 32px;
       color: #fff;
     }
 
@@ -239,18 +268,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       display: block;
     }
 
-
     .table {
-      width: 400px;
+      width: 100%;
+      font-size: 24px;
       border-collapse: collapse;
-
+      margin: 20px auto;
     }
 
     .table th,
     .table td {
-      border: 3px solid #808080;
-      padding: 8px;
-      text-align: left;
+      border: 4px solid #808080;
+      padding: 16px;
+      text-align: center;
     }
 
     .table td {
@@ -261,59 +290,113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #f2f2f2;
       font-weight: bold;
     }
+
+    .btn {
+      padding: 20px 40px;
+      font-size: 24px;
+    }
+
+    .btn-primary {
+      background-color: #2196F3;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .btn-red {
+      background-color: red;
+      color: white;
+      padding: 24px 48px;
+      font-size: 32px;
+    }
+
+    .btn-red:hover {
+      background-color: darkred;
+    }
+
+    .btn-blue {
+      background-color: blue;
+      color: white;
+      padding: 24px 48px;
+      font-size: 32px;
+    }
+
+    h3,
+    h2 {
+      font-size: 32px;
+    }
   </style>
   <script>
     function toggleDarkMode() {
       var body = document.querySelector('body');
       body.classList.toggle('dark-mode');
+
+      // Store the dark mode preference in localStorage
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        localStorage.setItem('darkMode', 'false');
+      }
     }
 
-    // function search() {
-      // var myInput = document.getElementById('myInput').value;
-      // console.log("myInput:", myInput);
-      // Perform search operation with the input value
-      const searchFun = () =>{
-        let filter = document.getElementById('myInput').value.toUpperCase();    
-        let mytable = document.getElementById('mytable');
-        let tr = mytable.getElementsByTagName('tr');
+    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      var body = document.querySelector('body');
+      var darkMode = localStorage.getItem('darkMode');
 
-        for(var i=0; i<tr.length; i++){
-          let td = tr[i].getElementsByTagName('td')[1];
+      if (darkMode === 'true') {
+        body.classList.add('dark-mode');
+      }
+    });
 
-          if(td){
-            let textvalue = td.textContent || td.innerHTML;
+    const searchFun = () => {
+      let filter = document.getElementById('myInput').value.toUpperCase();
+      let mytable = document.getElementById('mytable');
+      let tr = mytable.getElementsByTagName('tr');
 
-            if(textvalue.toUpperCase().indexOf(filter) > -1){
-               tr[i].style.display = "";
-            }else{
-              tr[i].style.display = "none";
-            }
+      for (var i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td')[1];
+
+        if (td) {
+          let textvalue = td.textContent || td.innerHTML;
+
+          if (textvalue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
           }
         }
       }
-    // }
+    }
 
     function clearSearch() {
-  var input = document.getElementById('myInput');
-  var tr = document.getElementsByTagName('tr');
-  input.value = ''; // Clear the input value
+      var input = document.getElementById('myInput');
+      var tr = document.getElementsByTagName('tr');
+      input.value = ''; // Clear the input value
 
-  // Display all table rows
-  for (var i = 0; i < tr.length; i++) {
-    tr[i].style.display = "";
-  }
-}
+      // Display all table rows
+      for (var i = 0; i < tr.length; i++) {
+        tr[i].style.display = "";
+      }
+    }
 
     function showAddproductForm() {
       var addGroupForm = document.querySelector('.add-group-form');
       addGroupForm.style.display = 'block';
     }
+
     function backspace() {
       var addGroupForm = document.querySelector('.add-group-form');
       addGroupForm.style.display = 'none';
     }
-  </script>
 
+    function confirmRemove() {
+      return confirm("Are you sure you want to remove this product?");
+    }
+  </script>
 </head>
 
 <body>
@@ -323,17 +406,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <span class="slider"></span>
   </label>
 
-
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">
           <a href="group.php" class="btn btn-secondary">Groups</a>
           <br>
-          <h2>welcome to device </h2>
+          <h2>Welcome to the Product Page</h2>
           <hr>
           <div class="search-container">
-            <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeydown="searchFun()">
+            <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
             <span class="close-button" onclick="clearSearch()">&times;</span>
             <button onclick="searchFun()" class="btn btn-primary search-button">
               <i class="fas fa-search"></i>
@@ -343,69 +425,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="add-group-form">
             <form method="POST" action="">
               <input type="text" name="product_name" placeholder="Product Name" required class="form-control"><br>
-              <input type="nummber" name="groupid" placeholder="Group id" required class="form-control"><br>
+              <input type="text" name="groupname" placeholder="Group Name" required class="form-control"><br>
               <input type="submit" class="btn btn-primary" value="Create">&nbsp;
               <button onclick="backspace()" class="btn btn-secondary">Back</button>
             </form>
-
           </div>
+
           <button onclick="showAddproductForm()" class="btn btn-primary add-group">+ Add products</button>
           <br>
-          <h3>My products</h3>
+          <h3>Group: <?php echo $groupname; ?></h3>
           <table class="table" id="mytable">
-            <thead>
+            <thead class="thead-dark">
               <tr>
                 <th>No</th>
                 <th>Product Name</th>
-                <th>Group name </th>
+                <th>Group Name</th>
+                <th>Remove</th>
               </tr>
             </thead>
             <tbody>
               <?php
-              $servername = "mysql_db";
-              $username = "root";
-              $password = "root";
-              $database = "ashii";
-
-              // create connection
-              $connection = new mysqli($servername, $username, $password, $database);
-
-              // check connection
-              if ($connection->connect_error) {
-                die("connection failed: " . $connection->connect_error);
+              if (isset($products)) {
+                if (!empty($products)) {
+                  $counter = 1;
+                  foreach ($products as $row) {
+                    echo "<tr>
+                          <td>" . $counter . "</td>
+                          <td>" . $row["product_name"] . "</td>
+                          <td>" . $row["groupname"] . "</td>
+                          <td><a href='product.php?pn=" . $row["product_name"] . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
+                          </tr>";
+                    $counter++;
+                  }
+                } else {
+                  echo "<tr><td colspan='4'>No products found for this group</td></tr>";
+                }
+              } else {
+                echo "<tr><td colspan='4'>No products found</td></tr>";
               }
-              // read all row from databse table
-              $sql = "SELECT device.id,device.product_name,`groups`.`groupname`
-                FROM device,`groups`
-                WHERE device.groupid = `groups`.`id`
-                ORDER BY device.id";
-              $result = $connection->query($sql);
-
-              if (!$result) {
-                die("invalid query: . $connection->error");
-              }
-
-              // read data of each row
-              while ($row = $result->fetch_assoc()) {
-                echo "<tr>
-                  <td>" . $row["id"] . "</td>
-                  <td>" . $row["product_name"] . "</td>
-                  <td>" . $row["groupname"] . "</td>
-                  </tr>";
-
-              }
-
-
               ?>
             </tbody>
           </table>
+          <?php if (!empty($message)): ?>
+          <center>
+            <p>
+              <?php echo $message; ?>
+            </p>
+          </center>
+          <?php endif; ?>
+
+          <?php if (!empty($deleteMessage)): ?>
+          <center>
+            <p>
+              <?php echo $deleteMessage; ?>
+            </p>
+          </center>
+          <?php endif; ?>
+
         </div>
       </div>
     </div>
   </div>
-
-
-
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

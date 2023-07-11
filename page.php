@@ -239,6 +239,45 @@
       color: black;
     }
   </style>
+  <script>
+    function searchFun() {
+      let filter = document.getElementById('myInput').value.toUpperCase();
+      let mytable = document.getElementById('mytable');
+      let tr = mytable.getElementsByTagName('tr');
+
+      for (var i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td')[1];
+
+        if (td) {
+          let textvalue = td.textContent || td.innerHTML;
+
+          if (textvalue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    //     function searchProductSuggestions() {
+    //   var input = document.getElementById('searchInput').value.toUpperCase();
+    //   var suggestions = document.getElementById('productSuggestions');
+    //   var products = 
+
+    //   td.textContent || td.innerHTML = '';
+
+    //   if (input.trim() !== '') {
+    //     products.forEach(function (product) {
+    //       if (product.product_name.toUpperCase().includes(input)) {
+    //         var option = document.createElement('option');
+    //         option.value = product.product_name;
+    //         suggestions.appendChild(option);
+    //       }
+    //     });
+    //   }
+    // }
+  </script>
 </head>
 
 <body>
@@ -246,6 +285,15 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">
+          <div class="search-container">
+            <span class="close-button" onclick="clearSearch()">&times;</span>
+            <input type="text" id="searchInput" name="search" placeholder="Search" class="form-control search-input"
+              onkeyup="searchFun()">
+            <datalist id="groupSuggestions"></datalist>
+            <button onclick="searchFun()" class="btn btn-primary search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
           <div class="container">
             <div class="search-container">
               <table class="table" id="mytable">
@@ -301,3 +349,4 @@
 </body>
 
 </html>
+

@@ -1,1 +1,1 @@
-select * from device
+select groupname from `groups`
