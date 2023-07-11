@@ -55,9 +55,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$product_name = $_GET['pn'];
+// $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
+// if (!empty($product_name)) {
+//   header("Location: product.php?product_name=" . urlencode($product_name));
+//   exit();
+// }
+
+
+$product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 
 if (!empty($product_name)) {
+  $groupid = $_GET['groupid'];
+
   $servername = "mysql_db";
   $username = "root";
   $password = "root";
@@ -67,24 +76,28 @@ if (!empty($product_name)) {
   $conn = new mysqli($servername, $username, $password, $database);
 
   // Check connection
-  if (mysqli_connect_error()) {
-    die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
-  } else {
-    $query = "DELETE FROM device WHERE product_name = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $product_name);
-    $stmt->execute();
-
-    if ($stmt->affected_rows > 0) {
-      $deleteMessage = "Record deleted from the database";
-      $_SESSION['deleteMessage'] =  $deleteMessage;
-    } else {
-      $deleteMessage = "Failed to delete record from the database";
-      $_SESSION['deleteMessage'] =  $deleteMessage;
-    }
-
-    $stmt->close();
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
   }
+
+  $query = "DELETE FROM device WHERE product_name = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $product_name);
+  $stmt->execute();
+
+  if ($stmt->affected_rows > 0) {
+    $deleteMessage = "Record deleted from the database";
+    $_SESSION['deleteMessage'] = $deleteMessage;
+  } else {
+    $deleteMessage = "Failed to delete record from the database";
+    $_SESSION['deleteMessage'] = $deleteMessage;
+  }
+
+  $stmt->close();
+  $conn->close();
+
+  header("Location: product.php?groupid=" . urlencode($groupid) . "&product_name=" . urlencode($product_name));
+  exit();
 }
 
 $groupid = $_GET['groupid'];
@@ -111,9 +124,15 @@ if (!empty($groupid)) {
   $stmt->fetch();
   $stmt->close();
 
-  $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id ORDER BY device.id";
-  $stmt = $conn->prepare($productQuery);
-  $stmt->bind_param("s", $groupid);
+  if (!empty($product_name)) {
+    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id AND device.product_name = ? ORDER BY device.id";
+    $stmt = $conn->prepare($productQuery);
+    $stmt->bind_param("ss", $groupid, $product_name);
+  } else {
+    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id ORDER BY device.id";
+    $stmt = $conn->prepare($productQuery);
+    $stmt->bind_param("s", $groupid);
+  }
   $stmt->execute();
   $productResult = $stmt->get_result();
   $products = $productResult->fetch_all(MYSQLI_ASSOC);
@@ -214,7 +233,61 @@ if (!empty($groupid)) {
       text-align: center;
       width: 800px;
     }
+    
+.card.dark-mode {
+  background-color: #171717;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
 
+.add-group {
+    background-color: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+
+  }
+  .add-group:hover {
+    background-color: #0077C2;
+  }
+  .add-group-form {
+    display: none;
+    text-align: center;
+    padding: 30px;
+  }
+  .add-group-form input[type="text"],
+  .add-group-form input[type="submit"],
+  .add-group-form button {
+    font-size: 24px; /* Increase the font size for the input field, create button, and back button */
+    padding: 12px 24px; /* Increase the padding for the input field, create button, and back button */
+    margin-bottom: 10px; /* Add some spacing between the elements */
+    width: 400px; /* Adjust the width value as per your requirement */
+  }
+  
+
+  /* Media queries for different screen sizes */
+  @media (max-width: 480px) {
+    .card {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    .card {
+      padding: 15px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .card {
+      padding: 25px;
+    }
+  }
     .search-container {
       position: relative;
       display: flex;
@@ -331,26 +404,31 @@ if (!empty($groupid)) {
   </style>
   <script>
     function toggleDarkMode() {
-      var body = document.querySelector('body');
-      body.classList.toggle('dark-mode');
+    var body = document.querySelector('body');
+    var card = document.querySelector('.card');
+    body.classList.toggle('dark-mode');
 
-      // Store the dark mode preference in localStorage
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        localStorage.setItem('darkMode', 'false');
-      }
+    // Update card class based on dark mode
+    if (body.classList.contains('dark-mode')) {
+      card.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      card.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', 'false');
     }
+  }
 
-    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-    document.addEventListener('DOMContentLoaded', function () {
-      var body = document.querySelector('body');
-      var darkMode = localStorage.getItem('darkMode');
+  // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+  document.addEventListener('DOMContentLoaded', function () {
+    var body = document.querySelector('body');
+    var card = document.querySelector('.card');
+    var darkMode = localStorage.getItem('darkMode');
 
-      if (darkMode === 'true') {
-        body.classList.add('dark-mode');
-      }
-    });
+    if (darkMode === 'true') {
+      body.classList.add('dark-mode');
+      card.classList.add('dark-mode');
+    }
+  });
 
     const searchFun = () => {
       let filter = document.getElementById('myInput').value.toUpperCase();
@@ -415,7 +493,8 @@ if (!empty($groupid)) {
           <h2>Welcome to the Product Page</h2>
           <hr>
           <div class="search-container">
-            <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
+            <input type="text" id="myInput" class="form-control search-input" placeholder="Search"
+              onkeyup="searchFun()">
             <span class="close-button" onclick="clearSearch()">&times;</span>
             <button onclick="searchFun()" class="btn btn-primary search-button">
               <i class="fas fa-search"></i>
@@ -433,7 +512,9 @@ if (!empty($groupid)) {
 
           <button onclick="showAddproductForm()" class="btn btn-primary add-group">+ Add products</button>
           <br>
-          <h3>Group: <?php echo $groupname; ?></h3>
+          <h3>Group:
+            <?php echo $groupname; ?>
+          </h3>
           <table class="table" id="mytable">
             <thead class="thead-dark">
               <tr>
@@ -445,16 +526,18 @@ if (!empty($groupid)) {
             </thead>
             <tbody>
               <?php
+              $product_name = isset($_GET['product_name']) ? $_GET['product_name'] : null;
               if (isset($products)) {
                 if (!empty($products)) {
                   $counter = 1;
                   foreach ($products as $row) {
                     echo "<tr>
-                          <td>" . $counter . "</td>
-                          <td>" . $row["product_name"] . "</td>
-                          <td>" . $row["groupname"] . "</td>
-                          <td><a href='product.php?pn=" . $row["product_name"] . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
-                          </tr>";
+      <td>" . $counter . "</td>
+      <td>" . $row["product_name"] . "</td>
+      <td>" . $row["groupname"] . "</td>
+      <td><a href='product.php?groupid=" . urlencode($groupid) . "&pn=" . urlencode($row["product_name"]) . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
+      </tr>";
+
                     $counter++;
                   }
                 } else {
@@ -464,22 +547,23 @@ if (!empty($groupid)) {
                 echo "<tr><td colspan='4'>No products found</td></tr>";
               }
               ?>
+
             </tbody>
           </table>
           <?php if (!empty($message)): ?>
-          <center>
-            <p>
-              <?php echo $message; ?>
-            </p>
-          </center>
+            <center>
+              <p>
+                <?php echo $message; ?>
+              </p>
+            </center>
           <?php endif; ?>
 
           <?php if (!empty($deleteMessage)): ?>
-          <center>
-            <p>
-              <?php echo $deleteMessage; ?>
-            </p>
-          </center>
+            <center>
+              <p>
+                <?php echo $deleteMessage; ?>
+              </p>
+            </center>
           <?php endif; ?>
 
         </div>

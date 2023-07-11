@@ -1,4 +1,5 @@
 <?php
+session_start();
 error_reporting(0);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,6 +24,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $SELECT = "SELECT groupname FROM `groups` WHERE groupname = ? LIMIT 1";
       $INSERT = "INSERT Into `groups` (groupname) values(?)";
 
+      
+     // Fetch product suggestions from the device table
+$productSuggestions = [];
+if (!empty($searchQuery)) {
+  $productQuery = "SELECT product_name FROM device WHERE product_name LIKE '%$searchQuery%'";
+  $stmt = $conn->prepare($productQuery);
+  $stmt->execute();
+  $productResult = $stmt->get_result();
+  $productSuggestions = $productResult->fetch_all(MYSQLI_ASSOC);
+  $stmt->close();
+}
+
+}
+
+      
       // prepare statement
       $stmt = $conn->prepare($SELECT);
       $stmt->bind_param("s", $groupname);
@@ -47,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
     $message = "All fields are required";
   }
-}
+
 
 $groupname = $_GET['gn'];
 
@@ -429,7 +445,28 @@ button.return-button:hover {
 button.return-button b {
     position: relative;
     z-index: 2;
+} 
+#suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  z-index: 9999;
 }
+
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background-color: #f2f2f2;
+}
+
   </style>
   <script>
 
@@ -464,29 +501,47 @@ function openSettings() {
         body.classList.add('dark-mode');
       }
     });
+    function searchFun() {
+  let filter = document.getElementById('myInput').value.toUpperCase();
+  let mytable = document.getElementById('mytable');
+  let tr = mytable.getElementsByTagName('tr');
 
-    function searchGroup() {
-      var input = document.getElementById('searchInput').value.toUpperCase();
-      var mytable = document.getElementById('mytable');
-      var tr = mytable.getElementsByTagName('tr');
+  for (var i = 0; i < tr.length; i++) {
+    let td = tr[i].getElementsByTagName('td')[1];
 
-      for (var i = 0; i < tr.length; i++) {
-        var td = tr[i].getElementsByTagName('td')[1];
+    if (td) {
+      let textvalue = td.textContent || td.innerHTML;
 
-        if (td) {
-          var textvalue = td.textContent || td.innerHTML;
-
-          if (textvalue.toUpperCase().indexOf(input) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
+      if (textvalue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
       }
     }
+  }
+
+  // Display product search suggestions
+  let suggestionsContainer = document.getElementById('suggestions');
+  suggestionsContainer.innerHTML = '';
+
+  if (filter.length > 0 && Array.isArray(productSuggestions) && productSuggestions.length > 0) {
+    productSuggestions.forEach((product) => {
+      let suggestion = document.createElement('div');
+      suggestion.textContent = product.product_name;
+      suggestion.classList.add('suggestion');
+      suggestion.addEventListener('click', function () {
+        document.getElementById('myInput').value = this.textContent;
+        searchFun();
+      });
+
+      suggestionsContainer.appendChild(suggestion);
+    });
+  }
+}
+
 
     function clearSearch() {
-      var input = document.getElementById('searchInput');
+      var input = document.getElementById('myInput');
       var tr = document.getElementsByTagName('tr');
       input.value = ''; // Clear the input value
 
@@ -524,13 +579,16 @@ function openSettings() {
                     <h2><em>Welcome To My Data</em></h2>
                     <hr>
                     <div class="search-container">
-                        <span class="close-button" onclick="clearSearch()">&times;</span>
-                        <input type="text" id="searchInput" name="search" placeholder="Search" class="form-control search-input"
-              onkeyup="searchGroup()">
-            <button onclick="searchGroup()" class="btn btn-primary search-button">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
+  <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
+  <span class="close-button" onclick="clearSearch()">&times;</span>
+  <button onclick="searchFun()" class="btn btn-primary search-button">
+    <i class="fas fa-search"></i>
+  </button>
+</div>
+
+<div id="suggestions"></div>
+
+
           <div class="add-group-form" style="display: none;">
             <form method="POST" action="">
               <input type="text" name="groupname" placeholder="Group Name" required class="form-control"><br>
