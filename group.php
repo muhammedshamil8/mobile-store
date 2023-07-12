@@ -374,7 +374,7 @@ $conn->close();
   margin: 25px 0;
   font-size: 0.9em;
   font-family: sans-serif;
-  min-width: 700px;
+  min-width: 100%;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -558,20 +558,19 @@ $conn->close();
   var card = document.querySelector('.card');
   var table1 = document.querySelector('.table');
   var table2 = document.querySelector('.styled-table');
-  body.classList.toggle('dark-mode');
+  var darkMode = body.classList.toggle('dark-mode');
 
   // Update classes based on dark mode
-  if (body.classList.contains('dark-mode')) {
-    card.classList.add('dark-mode');
-    table1.classList.add('dark-mode');
-    table2.classList.add('dark-mode');
-    localStorage.setItem('darkMode', 'true');
-  } else {
-    card.classList.remove('dark-mode');
-    table1.classList.remove('dark-mode');
-    table2.classList.remove('dark-mode');
-    localStorage.setItem('darkMode', 'false');
-  }
+  card.classList.toggle('dark-mode', darkMode);
+  table1.classList.toggle('dark-mode', darkMode);
+  table2.classList.toggle('dark-mode', darkMode);
+
+  // Update dark mode toggle button state
+  var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
+  darkModeCheckbox.checked = darkMode;
+
+  // Store dark mode preference
+  localStorage.setItem('darkMode', darkMode ? 'true' : 'false');
 }
 
 // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
@@ -588,8 +587,11 @@ document.addEventListener('DOMContentLoaded', function () {
     table1.classList.add('dark-mode');
     table2.classList.add('dark-mode');
   }
-});
 
+  // Update dark mode toggle button state
+  var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
+  darkModeCheckbox.checked = darkMode === 'true';
+});
 
     function searchFun() {
       let filter = document.getElementById('myInput').value.toUpperCase();
@@ -672,26 +674,30 @@ document.addEventListener('DOMContentLoaded', function () {
           <table class="table" id="mytable" style="display: none;">
             <thead class="thead-dark">
               <tr>
-                <th colspan="3">suggestions !</th>
+                <th colspan="4">suggestions !</th>
               </tr>
               <tr>
                 <th>No</th>
                 <th>Product Name</th>
                 <th>Group Name</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
-              <?php
-              if (!empty($products)) {
-                foreach ($products as $product) {
-                  echo "<tr>
+            <?php
+    if (!empty($products)) {
+      foreach ($products as $product) {
+        echo "<tr>
                 <td>" . $product["id"] . "</td>
                 <td>" . $product["product_name"] . "</td>
                 <td>" . $product["groupname"] . "</td>
+                <td><a href='page.html' class='custom-link'>
+                  <button class='btn btn-primary search-button'>Click</button>
+                </a></td>
               </tr>";
-                }
-              }
-              ?>
+      }
+    }
+    ?>
 
             </tbody>
           </table>
@@ -716,8 +722,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tr>
                   <th>No:</th>
                   <th>Group Name</th>
-                  <th>Action</th>
-                  <th>Kill</th>
+                  <th>&nbsp;&nbsp;Action</th>
+                  <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Kill</th>
                 </tr>
               </thead>
               <tbody>
@@ -728,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>" . $group . "</a></td>
           <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>
           <button class='btn btn-primary search-button'>Open</button></a></td>
-           <td><a href='group.php?gn=" . urlencode($group) . "' onclick='return confirmRemove();' class='btn btn-red search-button'>Remove</a></td>
+           <td><a href='group.php?gn=" . urlencode($group) . "' onclick='return confirmRemove();' class='btn btn-red search-button'>Delete</a></td>
 
                        </tr>";
                 }
@@ -760,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <ul>
       <li>
         <label>
-          <input type="checkbox" name="darkMode" onclick="toggleDarkMode()"> Dark Mode
+          <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
         </label>
       </li>
       <li>

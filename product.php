@@ -149,7 +149,7 @@ if (!empty($groupid)) {
 <html>
 
 <head>
-  <title>Product</title>
+  <title>device</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- Font Awesome CSS -->
@@ -468,39 +468,43 @@ if (!empty($groupid)) {
     }
   </style>
   <script>
-    function toggleDarkMode() {
+function toggleDarkMode() {
   var body = document.querySelector('body');
   var card = document.querySelector('.card');
   var table = document.querySelector('.styled-table');
-  var isDarkMode = localStorage.getItem('darkMode');
+  var isDarkMode = body.classList.toggle('dark-mode');
 
-  body.classList.toggle('dark-mode');
-  
   // Update card and table class based on dark mode
-  if (body.classList.contains('dark-mode')) {
-    card.classList.add('dark-mode');
-    table.classList.add('dark-mode');
-    localStorage.setItem('darkMode', 'true');
-  } else {
-    card.classList.remove('dark-mode');
-    table.classList.remove('dark-mode');
-    localStorage.setItem('darkMode', 'false');
-  }
+  card.classList.toggle('dark-mode', isDarkMode);
+  table.classList.toggle('dark-mode', isDarkMode);
+
+  // Store dark mode preference
+  localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
 }
 
-// Retrieve the dark mode preference from localStorage and apply the dark mode on page load
 document.addEventListener('DOMContentLoaded', function () {
   var body = document.querySelector('body');
   var card = document.querySelector('.card');
   var table = document.querySelector('.styled-table');
+
+  // Retrieve the dark mode preference from localStorage
   var isDarkMode = localStorage.getItem('darkMode');
 
+  // Set the initial state of dark mode based on the stored preference
   if (isDarkMode === 'true') {
     body.classList.add('dark-mode');
     card.classList.add('dark-mode');
     table.classList.add('dark-mode');
   }
+
+  // Update dark mode toggle button state
+  var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
+  darkModeCheckbox.checked = isDarkMode === 'true';
+
+  // Attach event listener to toggle button
+  darkModeCheckbox.addEventListener('change', toggleDarkMode);
 });
+
 
 const searchFun = () => {
       let filter = document.getElementById('myInput').value.toUpperCase();
@@ -550,10 +554,11 @@ const searchFun = () => {
 
 <body>
 
-  <label class="switch">
-    <input type="checkbox" onclick="toggleDarkMode()">
-    <span class="slider"></span>
-  </label>
+<label class="switch">
+  <input type="checkbox" name="darkMode" checked>
+  <span class="slider"></span>
+</label>
+
 
   <div class="container">
     <div class="row justify-content-center">
@@ -592,7 +597,8 @@ const searchFun = () => {
                 <th>No</th>
                 <th>Product Name</th>
                 <th>Group Name</th>
-                <th>Remove</th>
+                <th>Action</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -606,6 +612,8 @@ const searchFun = () => {
       <td>" . $counter . "</td>
       <td>" . $row["product_name"] . "</td>
       <td>" . $row["groupname"] . "</td>
+      <td><a href='page.html' class='custom-link'>
+          <button class='btn btn-primary search-button'>Open</button></a></td>
       <td>
       <a href='product.php?groupid=" . urlencode($groupid) . "&pn=" . urlencode($row["product_name"]) . "' onclick='return confirmRemove();'>
         <button class='btn btn-red search-button'>Remove</button>
