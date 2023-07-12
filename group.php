@@ -152,7 +152,7 @@ $conn->close();
     }
 
     body.dark-mode {
-      background-color: #212121;
+      background-color: #212124;
       color: #ffffff;
     }
 
@@ -201,7 +201,12 @@ $conn->close();
       text-align: center;
       /* width: 800px; */
     }
-
+    
+    .card.dark-mode {
+      background-color: #000000;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+    }
     .add-group {
       background-color: #2196F3;
       color: #fff;
@@ -363,53 +368,136 @@ $conn->close();
     .add-group-form {
       display: none;
     }
+  /* search table style */
+.table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 700px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
 
-    .table {
-      width: 100%;
-      font-size: 34px;
-      border-collapse: collapse;
-      margin: 20px auto;
-    }
+.table.dark-mode {
+  background-color: #e1dbd6;
+  color: #ffffff;
+}
 
-    .table th,
-    .table td {
-      border: 4px solid #808080;
-      padding: 16px;
-      text-align: center;
-    }
+.table td {
+  background-color:#506680;
+  color:#000000;
+}
 
-    .table td {
-      background-color: #CAE7D3;
-    }
+.table.dark-mode td {
+  background-color: #152642 ;
+  color: #ffffff;
+}
 
-    .table th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
+.table th {
+  background-color: #061148;
+  color: #ffffff;
+  font-weight: bold;
+}
 
-    .custom-link {
-      text-decoration: none;
-      color: black;
-      font-size: 20px;
-    }
+.table.dark-mode th {
+  background-color: #061148;
+  color: #ffffff;
+  font-weight: bold;
+}
 
-    .btn-red {
-      background-color: red;
-      color: white;
-      padding: 12px 24px;
-      font-size: 24px;
-    }
+/* group table style */
+.styled-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  width: 100%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  table-layout: fixed;
+}
 
-    .btn-red:hover {
-      background-color: darkred;
-    }
+.styled-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
 
-    .btn-blue {
-      background-color: blue;
-      color: white;
-      padding: 12px 24px;
-      font-size: 24px;
-    }
+.styled-table.dark-mode thead tr {
+  background-color: #061148;
+  color: #ffffff;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+
+.styled-table td {
+  padding: 12px 0;
+  position: relative;
+}
+
+.styled-table tbody tr {
+  border-bottom: thin solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+.styled-table.dark-mode tbody tr:nth-of-type(even) {
+  background-color: #152642;
+}
+.styled-table tbody tr:nth-of-type(odd) {
+  background-color: #ffffff;
+}
+.styled-table.dark-mode tbody tr:nth-of-type(odd) {
+  background-color: #2F4562;
+}
+
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.styled-table.dark-mode tbody tr.active-row {
+  color: #ffffff;
+}
+
+.custom-link {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+}
+
+.btn-red {
+  background-color: red;
+  color: white;
+  padding: 12px 22px;
+  font-size: 21px;
+  border-radius: 6px;
+  position: absolute;
+  top: 12px;
+  transform: translateY(-50%);
+  left: 70px;
+  transform: translateX(-50%);
+}
+
+.btn-red:hover {
+  background-color: darkred;
+}
+
+.btn-blue {
+  background-color: blue;
+  color: white;
+  padding: 12px 24px;
+  font-size: 24px;
+  border-radius: 6px;
+}
 
     button.return-button {
       position: absolute;
@@ -466,26 +554,42 @@ $conn->close();
     }
 
     function toggleDarkMode() {
-      var body = document.querySelector('body');
-      body.classList.toggle('dark-mode');
+  var body = document.querySelector('body');
+  var card = document.querySelector('.card');
+  var table1 = document.querySelector('.table');
+  var table2 = document.querySelector('.styled-table');
+  body.classList.toggle('dark-mode');
 
-      // Store the dark mode preference in localStorage
-      if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        localStorage.setItem('darkMode', 'false');
-      }
-    }
+  // Update classes based on dark mode
+  if (body.classList.contains('dark-mode')) {
+    card.classList.add('dark-mode');
+    table1.classList.add('dark-mode');
+    table2.classList.add('dark-mode');
+    localStorage.setItem('darkMode', 'true');
+  } else {
+    card.classList.remove('dark-mode');
+    table1.classList.remove('dark-mode');
+    table2.classList.remove('dark-mode');
+    localStorage.setItem('darkMode', 'false');
+  }
+}
 
-    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-    document.addEventListener('DOMContentLoaded', function () {
-      var body = document.querySelector('body');
-      var darkMode = localStorage.getItem('darkMode');
+// Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+document.addEventListener('DOMContentLoaded', function () {
+  var body = document.querySelector('body');
+  var card = document.querySelector('.card');
+  var table1 = document.querySelector('.table');
+  var table2 = document.querySelector('.styled-table');
+  var darkMode = localStorage.getItem('darkMode');
 
-      if (darkMode === 'true') {
-        body.classList.add('dark-mode');
-      }
-    });
+  if (darkMode === 'true') {
+    body.classList.add('dark-mode');
+    card.classList.add('dark-mode');
+    table1.classList.add('dark-mode');
+    table2.classList.add('dark-mode');
+  }
+});
+
 
     function searchFun() {
       let filter = document.getElementById('myInput').value.toUpperCase();
@@ -607,8 +711,8 @@ $conn->close();
 
           <h3><i>My Data Groups</i></h3>
           <div class="container">
-            <table class="table">
-              <thead class="thead-dark">
+            <table class="styled-table"  >
+              <thead >
                 <tr>
                   <th>No:</th>
                   <th>Group Name</th>
@@ -619,12 +723,13 @@ $conn->close();
               <tbody>
                 <?php
                 foreach ($groupNames as $id => $group) {
-                  echo "<tr>
+                  echo "<tr class=\"active-row\">
           <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>" . $id . "</a></td>
           <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>" . $group . "</a></td>
           <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>
           <button class='btn btn-primary search-button'>Open</button></a></td>
-          <td><a href='group.php?gn=" . urlencode($group) . "' onclick='return confirmRemove();' class='btn btn-red search-button'>Remove</a></td>
+           <td><a href='group.php?gn=" . urlencode($group) . "' onclick='return confirmRemove();' class='btn btn-red search-button'>Remove</a></td>
+
                        </tr>";
                 }
                 ?>

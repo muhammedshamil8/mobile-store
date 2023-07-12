@@ -249,9 +249,9 @@ if (!empty($groupid)) {
       color: #fff;
       border: none;
       border-radius: 5px;
-      padding: 20px 40px;
+      padding: 20px 30px;
       font-size: 24px;
-      cursor: pointer;
+      cursor: cell;
       transition: background-color 0.3s;
       margin-top: 20px;
 
@@ -358,61 +358,109 @@ if (!empty($groupid)) {
       display: block;
     }
 
-    .table {
-      width: 100%;
-      font-size: 28px;
-      border-collapse: collapse;
-      margin: 20px auto;
-    }
+    .styled-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 700px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
 
-    .table th,
-    .table td {
-      border: 4px solid #808080;
-      padding: 16px;
-      text-align: center;
-    }
+.styled-table.dark-mode {
+  background-color: #171717;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
 
-    .table td {
-      background-color: #CAE7D3;
-    }
+.styled-table thead tr {
+  background-color: #0c784b;
+  color: #ffffff;
+  text-align: left;
+}
 
-    .table th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
+.styled-table.dark-mode thead tr {
+  background-color: #061148;
+}
 
-    .btn {
-      padding: 10px 30px;
-      font-size: 24px;
-    }
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
 
-    .btn-primary {
-      background-color: #2196F3;
-      color: #fff;
-    }
+.styled-table tbody tr {
+  border-bottom: thin solid #dddddd;
+}
 
-    .btn-secondary {
-      background-color: #6c757d;
-      color: #fff;
-    }
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #E1F8DC;
+}
 
-    .btn-red {
-      background-color: red;
-      color: white;
-      padding: 24px 48px;
-      font-size: 32px;
-    }
+.styled-table.dark-mode tbody tr:nth-of-type(even) {
+  background-color: #212124;
+}
 
-    .btn-red:hover {
-      background-color: darkred;
-    }
+.styled-table tbody tr:nth-of-type(odd) {
+  background-color: #C1E1D2;
+}
 
-    .btn-blue {
-      background-color: blue;
-      color: white;
-      padding: 24px 48px;
-      font-size: 32px;
-    }
+.styled-table.dark-mode tbody tr:nth-of-type(odd) {
+  background-color: #161618;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: none;
+}
+
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #171717;
+}
+
+.styled-table.dark-mode tbody tr.active-row {
+  color: #ffffff;
+}
+
+.styled-table tbody td:last-child {
+  text-align: center;
+}
+
+.btn {
+  padding: 10px 30px;
+  font-size: 24px;
+}
+
+.btn-primary {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-red {
+  background-color: red;
+  color: white;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 6px;
+}
+
+.btn-red:hover {
+  background-color: darkred;
+}
+
+.btn-blue {
+  background-color: blue;
+  color: white;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 6px;
+}
 
     h3,
     h2 {
@@ -421,33 +469,40 @@ if (!empty($groupid)) {
   </style>
   <script>
     function toggleDarkMode() {
-      var body = document.querySelector('body');
-      var card = document.querySelector('.card');
-      body.classList.toggle('dark-mode');
+  var body = document.querySelector('body');
+  var card = document.querySelector('.card');
+  var table = document.querySelector('.styled-table');
+  var isDarkMode = localStorage.getItem('darkMode');
 
-      // Update card class based on dark mode
-      if (body.classList.contains('dark-mode')) {
-        card.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        card.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'false');
-      }
-    }
+  body.classList.toggle('dark-mode');
+  
+  // Update card and table class based on dark mode
+  if (body.classList.contains('dark-mode')) {
+    card.classList.add('dark-mode');
+    table.classList.add('dark-mode');
+    localStorage.setItem('darkMode', 'true');
+  } else {
+    card.classList.remove('dark-mode');
+    table.classList.remove('dark-mode');
+    localStorage.setItem('darkMode', 'false');
+  }
+}
 
-    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-    document.addEventListener('DOMContentLoaded', function () {
-      var body = document.querySelector('body');
-      var card = document.querySelector('.card');
-      var darkMode = localStorage.getItem('darkMode');
+// Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+document.addEventListener('DOMContentLoaded', function () {
+  var body = document.querySelector('body');
+  var card = document.querySelector('.card');
+  var table = document.querySelector('.styled-table');
+  var isDarkMode = localStorage.getItem('darkMode');
 
-      if (darkMode === 'true') {
-        body.classList.add('dark-mode');
-        card.classList.add('dark-mode');
-      }
-    });
+  if (isDarkMode === 'true') {
+    body.classList.add('dark-mode');
+    card.classList.add('dark-mode');
+    table.classList.add('dark-mode');
+  }
+});
 
-    const searchFun = () => {
+const searchFun = () => {
       let filter = document.getElementById('myInput').value.toUpperCase();
       let mytable = document.getElementById('mytable');
       let tr = mytable.getElementsByTagName('tr');
@@ -466,7 +521,6 @@ if (!empty($groupid)) {
         }
       }
     }
-
     function clearSearch() {
       var input = document.getElementById('myInput');
       var tr = document.getElementsByTagName('tr');
@@ -532,7 +586,7 @@ if (!empty($groupid)) {
           <h3>Group:
             <?php echo $groupname; ?>
           </h3>
-          <table class="table" id="mytable">
+          <table class="styled-table" id="mytable">
             <thead class="thead-dark">
               <tr>
                 <th>No</th>
@@ -548,7 +602,7 @@ if (!empty($groupid)) {
                 if (!empty($products)) {
                   $counter = 1;
                   foreach ($products as $row) {
-                    echo "<tr>
+                    echo "<tr class=\"active-row\">
       <td>" . $counter . "</td>
       <td>" . $row["product_name"] . "</td>
       <td>" . $row["groupname"] . "</td>
