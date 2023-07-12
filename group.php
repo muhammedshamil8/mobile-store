@@ -109,59 +109,27 @@ if ($result->num_rows > 0) {
 
 $conn->close();
 
-$groupid = $_GET['groupid'];
+$product_name = $_GET['search'];
+$productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = `groups`.id";
 
-if (!empty($groupid)) {
-  $servername = "mysql_db";
-  $username = "root";
-  $password = "root";
-  $database = "ashii";
-
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $database);
-
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
-  $groupQuery = "SELECT groupname FROM `groups` WHERE id = ?";
-  $stmt = $conn->prepare($groupQuery);
-  $stmt->bind_param("s", $groupid);
-  $stmt->execute();
-  $stmt->bind_result($groupname);
-  $stmt->fetch();
-  $stmt->close();
-
-  $product_name = $_GET['search'];
-  $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id";
-
-  if (!empty($product_name)) {
-    $productQuery .= " AND device.product_name LIKE '%$product_name%'";
-  }
-
-  // // Fetch product suggestions from the device table
-  // $productSuggestions = [];
-  // if (!empty($_GET['search'])) {
-  //   $searchQuery = $_GET['search'];
-  //   $productQuery = "SELECT product_name FROM device WHERE product_name LIKE '%$searchQuery%'";
-  //   $stmt = $conn->prepare($productQuery);
-  //   $stmt->execute();
-  //   $productResult = $stmt->get_result();
-  //   $productSuggestions = $productResult->fetch_all(MYSQLI_ASSOC);
-  //   $stmt->close();
-  // }
-  $productQuery .= " ORDER BY device.id";
-
-  $stmt = $conn->prepare($productQuery);
-  $stmt->bind_param("s", $groupid);
-  $stmt->execute();
-  $productResult = $stmt->get_result();
-  $products = $productResult->fetch_all(MYSQLI_ASSOC);
-  $stmt->close();
-
-  $conn->close();
+if (!empty($product_name)) {
+  $productQuery .= " AND device.product_name LIKE '%$product_name%'";
 }
+
+$productQuery .= " ORDER BY device.id";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+$stmt = $conn->prepare($productQuery);
+$stmt->execute();
+$productResult = $stmt->get_result();
+$products = $productResult->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$conn->close();
 ?>
 
 

@@ -48,18 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $stmt->close();
     }
-    $conn->close();
+    
   } else {
     $message = "All fields are required";
     $_SESSION['message'] = $message;
   }
 }
 
-// $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
-// if (!empty($product_name)) {
-//   header("Location: product.php?product_name=" . urlencode($product_name));
-//   exit();
-// }
 
 
 $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
@@ -80,12 +75,11 @@ if (!empty($product_name)) {
     die("Connection failed: " . $conn->connect_error);
   }
 
-  $query = "DELETE FROM device WHERE product_name = ?";
-  $stmt = $conn->prepare($query);
-  $stmt->bind_param("s", $product_name);
-  $stmt->bind_param("s", $groupid);
+  $query = "DELETE FROM device WHERE product_name = ? AND groupid = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ss", $product_name, $groupid);
+$stmt->execute();
 
-  $stmt->execute();
 
   if ($stmt->affected_rows > 0) {
     $deleteMessage = "Record deleted from the database";
@@ -96,10 +90,11 @@ if (!empty($product_name)) {
   }
 
   $stmt->close();
-  $conn->close();
 
-  header("Location: product.php?groupid=" . urlencode($groupid) . "&product_name=" . urlencode($product_name));
-  exit();
+
+  header("Location: product.php?groupid=" . urlencode($groupid));
+exit();
+
 }
 
 $groupid = $_GET['groupid'];
@@ -242,44 +237,51 @@ if (!empty($groupid)) {
       text-align: center;
       /* width: 800px; */
     }
-    
-.card.dark-mode {
-  background-color: #171717;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
-}
 
-.add-group {
-    background-color: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 20px 40px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
+    .card.dark-mode {
+      background-color: #171717;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+    }
 
-  }
-  .add-group:hover {
-    background-color: #0077C2;
-  }
-  .add-group-form {
-    display: none;
-    text-align: center;
-    padding: 30px;
-  }
-  .add-group-form input[type="text"],
-  .add-group-form input[type="submit"],
-  .add-group-form button {
-    font-size: 24px; /* Increase the font size for the input field, create button, and back button */
-    padding: 12px 20px; /* Increase the padding for the input field, create button, and back button */
-    margin-bottom: 10px; /* Add some spacing between the elements */
-    width: 300px; /* Adjust the width value as per your requirement */
-  }
-  
-   /* Media queries for different screen sizes */
-   @media (max-width: 480px) {
+    .add-group {
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 20px 40px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+
+    }
+
+    .add-group:hover {
+      background-color: #0077C2;
+    }
+
+    .add-group-form {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .add-group-form input[type="text"],
+    .add-group-form input[type="submit"],
+    .add-group-form button {
+      font-size: 24px;
+      /* Increase the font size for the input field, create button, and back button */
+      padding: 12px 20px;
+      /* Increase the padding for the input field, create button, and back button */
+      margin-bottom: 10px;
+      /* Add some spacing between the elements */
+      width: 300px;
+      /* Adjust the width value as per your requirement */
+    }
+
+    /* Media queries for different screen sizes */
+    @media (max-width: 480px) {
       .card {
         padding: 10px;
       }
@@ -302,6 +304,7 @@ if (!empty($groupid)) {
         padding: 40px;
       }
     }
+
     .search-container {
       position: relative;
       display: flex;
@@ -416,33 +419,33 @@ if (!empty($groupid)) {
       font-size: 32px;
     }
   </style>
-   <script>
+  <script>
     function toggleDarkMode() {
-    var body = document.querySelector('body');
-    var card = document.querySelector('.card');
-    body.classList.toggle('dark-mode');
+      var body = document.querySelector('body');
+      var card = document.querySelector('.card');
+      body.classList.toggle('dark-mode');
 
-    // Update card class based on dark mode
-    if (body.classList.contains('dark-mode')) {
-      card.classList.add('dark-mode');
-      localStorage.setItem('darkMode', 'true');
-    } else {
-      card.classList.remove('dark-mode');
-      localStorage.setItem('darkMode', 'false');
+      // Update card class based on dark mode
+      if (body.classList.contains('dark-mode')) {
+        card.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        card.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+      }
     }
-  }
 
-  // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-  document.addEventListener('DOMContentLoaded', function () {
-    var body = document.querySelector('body');
-    var card = document.querySelector('.card');
-    var darkMode = localStorage.getItem('darkMode');
+    // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      var body = document.querySelector('body');
+      var card = document.querySelector('.card');
+      var darkMode = localStorage.getItem('darkMode');
 
-    if (darkMode === 'true') {
-      body.classList.add('dark-mode');
-      card.classList.add('dark-mode');
-    }
-  });
+      if (darkMode === 'true') {
+        body.classList.add('dark-mode');
+        card.classList.add('dark-mode');
+      }
+    });
 
     const searchFun = () => {
       let filter = document.getElementById('myInput').value.toUpperCase();
@@ -549,7 +552,12 @@ if (!empty($groupid)) {
       <td>" . $counter . "</td>
       <td>" . $row["product_name"] . "</td>
       <td>" . $row["groupname"] . "</td>
-      <td><a href='product.php?groupid=" . urlencode($groupid) . "&pn=" . urlencode($row["product_name"]) . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
+      <td>
+      <a href='product.php?groupid=" . urlencode($groupid) . "&pn=" . urlencode($row["product_name"]) . "' onclick='return confirmRemove();'>
+        <button class='btn btn-red search-button'>Remove</button>
+      </a>
+    </td>
+    
       </tr>";
 
                     $counter++;
@@ -579,7 +587,7 @@ if (!empty($groupid)) {
               </p>
             </center>
           <?php endif; ?>
-          
+
         </div>
       </div>
     </div>
