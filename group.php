@@ -24,21 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $SELECT = "SELECT groupname FROM `groups` WHERE groupname = ? LIMIT 1";
       $INSERT = "INSERT Into `groups` (groupname) values(?)";
 
-      
-     // Fetch product suggestions from the device table
-$productSuggestions = [];
-if (!empty($searchQuery)) {
-  $productQuery = "SELECT product_name FROM device WHERE product_name LIKE '%$searchQuery%'";
-  $stmt = $conn->prepare($productQuery);
-  $stmt->execute();
-  $productResult = $stmt->get_result();
-  $productSuggestions = $productResult->fetch_all(MYSQLI_ASSOC);
-  $stmt->close();
-}
 
-}
-
-      
       // prepare statement
       $stmt = $conn->prepare($SELECT);
       $stmt->bind_param("s", $groupname);
@@ -61,10 +47,9 @@ if (!empty($searchQuery)) {
       $conn->close();
     }
   } else {
-    $message = "All fields are required";
+    echo "All fields are required";
   }
-
-
+}
 $groupname = $_GET['gn'];
 
 if (!empty($groupname)) {
@@ -77,24 +62,25 @@ if (!empty($groupname)) {
   $conn = new mysqli($servername, $username, $password, $database);
 
   // Check connection
-  if (mysqli_connect_error()) {
-    die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
-  } else {
-    $query = "DELETE FROM `groups` WHERE groupname = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $groupname);
-    $stmt->execute();
-
-    if ($stmt->affected_rows > 0) {
-      $deleteMessage = "Group deleted from the database";
-    } else {
-      $deleteMessage = "Failed to delete group from the database";
-    }
-
-    $stmt->close();
-    $conn->close();
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
   }
+
+  $groupQuery = "DELETE FROM `groups` WHERE groupname = ?";
+  $stmt = $conn->prepare($groupQuery);
+  $stmt->bind_param("s", $groupname);
+  $stmt->execute();
+
+  if ($stmt->affected_rows > 0) {
+    $deleteMessage = "Group deleted from the database";
+  } else {
+    $deleteMessage = "Failed to delete group from the database";
+  }
+
+  $stmt->close();
+  $conn->close();
 }
+
 
 // Retrieve all groups
 $servername = "mysql_db";
@@ -117,11 +103,65 @@ $groupNames = array();
 
 if ($result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
-    $groupNames[] = $row["groupname"];
+    $groupNames[$row["id"]] = $row["groupname"];
   }
 }
 
 $conn->close();
+
+$groupid = $_GET['groupid'];
+
+if (!empty($groupid)) {
+  $servername = "mysql_db";
+  $username = "root";
+  $password = "root";
+  $database = "ashii";
+
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $database);
+
+  // Check connection
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+
+  $groupQuery = "SELECT groupname FROM `groups` WHERE id = ?";
+  $stmt = $conn->prepare($groupQuery);
+  $stmt->bind_param("s", $groupid);
+  $stmt->execute();
+  $stmt->bind_result($groupname);
+  $stmt->fetch();
+  $stmt->close();
+
+  $product_name = $_GET['search'];
+  $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id";
+
+  if (!empty($product_name)) {
+    $productQuery .= " AND device.product_name LIKE '%$product_name%'";
+  }
+
+  // // Fetch product suggestions from the device table
+  // $productSuggestions = [];
+  // if (!empty($_GET['search'])) {
+  //   $searchQuery = $_GET['search'];
+  //   $productQuery = "SELECT product_name FROM device WHERE product_name LIKE '%$searchQuery%'";
+  //   $stmt = $conn->prepare($productQuery);
+  //   $stmt->execute();
+  //   $productResult = $stmt->get_result();
+  //   $productSuggestions = $productResult->fetch_all(MYSQLI_ASSOC);
+  //   $stmt->close();
+  // }
+  $productQuery .= " ORDER BY device.id";
+
+  $stmt = $conn->prepare($productQuery);
+  $stmt->bind_param("s", $groupid);
+  $stmt->execute();
+  $productResult = $stmt->get_result();
+  $products = $productResult->fetch_all(MYSQLI_ASSOC);
+  $stmt->close();
+
+  $conn->close();
+}
 ?>
 
 
@@ -129,256 +169,255 @@ $conn->close();
 <html>
 
 <head>
-<title>Group</title>
+  <title>Group</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
   <style>
-  body {
-    font-size: 20px;
-    background-color: #afd2ee;
-    transition: background-color 0.3s, color 0.3s;
-    margin: 0;
-    padding: 0;
-  }
-
-  body.dark-mode {
-    background-color: #212121;
-    color: #ffffff;
-  }
-
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-
-  .settings-button {
-    position: absolute;
-    top: 20px;
-    right: 8px;
-    background-color: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 20px 30px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    z-index: 9999;
-  }
-
-  .settings-button:hover {
-    background-color: #0077C2;
-  }
-
-  .card {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    text-align: center;
-    width: 800px;
-
-  }
-
-  .add-group {
-    background-color: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 20px 40px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-
-  }
-  .add-group:hover {
-    background-color: #0077C2;
-  }
-  .add-group-form {
-    display: none;
-    text-align: center;
-    padding: 30px;
-  }
-  .add-group-form input[type="text"],
-  .add-group-form input[type="submit"],
-  .add-group-form button {
-    font-size: 24px; /* Increase the font size for the input field, create button, and back button */
-    padding: 12px 24px; /* Increase the padding for the input field, create button, and back button */
-    margin-bottom: 10px; /* Add some spacing between the elements */
-    width: 400px; /* Adjust the width value as per your requirement */
-  }
-  
-
-  /* Media queries for different screen sizes */
-  @media (max-width: 480px) {
-    .card {
-      padding: 10px;
+    body {
+      font-size: 20px;
+      background-color: #afd2ee;
+      transition: background-color 0.3s, color 0.3s;
+      margin: 0;
+      padding: 0;
     }
-  }
 
-  @media (min-width: 481px) and (max-width: 768px) {
-    .card {
-      padding: 15px;
+    body.dark-mode {
+      background-color: #212121;
+      color: #ffffff;
     }
-  }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .card {
-      padding: 25px;
+    input:checked+.slider {
+      background-color: #2196F3;
     }
-  }
 
-  @media (min-width: 1025px) {
-    .card {
-      padding: 40px;
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
     }
-  }
 
-  .settings-page {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 8px;
-    padding: 100px;
-    text-align: center;
-    z-index: 9999;
-  }
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
 
-  .settings-page h2 {
-    margin-top: 0;
-    font-size: 40px;
-  }
-
-  .settings-page ul {
-    list-style-type: none;
-    padding: 0;
-    font-size: 30px;
-  }
-
-  .settings-page li {
-    margin-bottom: 30px;
-    display: block;
-  }
-
-  .settings-page li input[type="checkbox"] {
-    margin-right: 15px;
-    transform: scale(2.5);
-  }
-
-  .settings-page button {
-    background-color: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 15px 30px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-  }
-
-  .settings-page button:hover {
-    background-color: #0077C2;
-  }
-
-  .settings-page .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  .search-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .search-input {
-    flex: 1;
-      margin-right: 10px;
-      padding: 16px 32px; 
+    .settings-button {
+      position: absolute;
+      top: 20px;
+      right: 5px;
+      background-color: #2196F3;
+      color: #fff;
       border: none;
       border-radius: 5px;
-      font-size: 28px; 
-      width: 600px; 
-    
-  }
+      padding: 20px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      z-index: 9999;
+    }
 
-  .close-button {
-    position: absolute;
-    top: 50%;
-    right: 90px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    padding: 5px;
-    color: red;
-    font-size: 50px;
-  }
+    .settings-button:hover {
+      background-color: #0077C2;
+    }
 
-  .search-button {
-    height: 60px;
-    padding: 15px 30px;
-    background-color: #2196F3;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 24px;
-    color: #fff;
-  }
+    .card {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      text-align: center;
+      /* width: 800px; */
+    }
 
-  .search-button:hover {
-    background-color: #0077C2;
-  }
+    .add-group {
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 20px 40px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
 
-  .add-group-form {
-    display: none;
-  }
-  .table {
-    width: 100%;
-    font-size: 24px;
-    border-collapse: collapse;
-    margin: 20px auto;
-  }
+    .add-group:hover {
+      background-color: #0077C2;
+    }
 
-  .table th,
-  .table td {
-    border: 4px solid #808080;
-    padding: 16px;
-    text-align: center;
-  }
+    .add-group-form {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
 
-  .table td {
-    background-color: #CAE7D3;
-  }
+    .add-group-form input[type="text"],
+    .add-group-form input[type="submit"],
+    .add-group-form button {
+      font-size: 24px;
+      padding: 12px 24px;
+      margin-bottom: 10px;
+      width: 400px;
+    }
 
-  .table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
+    /* Media queries for different screen sizes */
+    @media (max-width: 480px) {
+      .card {
+        padding: 10px;
+      }
+    }
 
+    @media (min-width: 481px) and (max-width: 768px) {
+      .card {
+        padding: 15px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .card {
+        padding: 25px;
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .card {
+        padding: 40px;
+      }
+    }
+
+    .settings-page {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 8px;
+      padding: 100px;
+      text-align: center;
+      z-index: 9999;
+    }
+
+    .settings-page h2 {
+      margin-top: 0;
+      font-size: 40px;
+    }
+
+    .settings-page ul {
+      list-style-type: none;
+      padding: 0;
+      font-size: 30px;
+    }
+
+    .settings-page li {
+      margin-bottom: 30px;
+      display: block;
+    }
+
+    .settings-page li input[type="checkbox"] {
+      margin-right: 15px;
+      transform: scale(2.5);
+    }
+
+    .settings-page button {
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 15px 30px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    .settings-page button:hover {
+      background-color: #0077C2;
+    }
+
+    .settings-page .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 18px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      margin-right: 10px;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 5px;
+      font-size: 28px;
+      width: 600px;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 50%;
+      right: 90px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      padding: 5px;
+      color: red;
+      font-size: 50px;
+    }
+
+    .search-button {
+      height: 60px;
+      padding: 15px 30px;
+      background-color: #2196F3;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .search-button:hover {
+      background-color: #0077C2;
+    }
+
+    .add-group-form {
+      display: none;
+    }
+
+    .table {
+      width: 100%;
+      font-size: 34px;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+
+    .table th,
+    .table td {
+      border: 4px solid #808080;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .table td {
+      background-color: #CAE7D3;
+    }
+
+    .table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
 
     .custom-link {
       text-decoration: none;
@@ -390,7 +429,7 @@ $conn->close();
       background-color: red;
       color: white;
       padding: 12px 24px;
-    font-size: 24px;
+      font-size: 24px;
     }
 
     .btn-red:hover {
@@ -401,84 +440,62 @@ $conn->close();
       background-color: blue;
       color: white;
       padding: 12px 24px;
-    font-size: 24px;
+      font-size: 24px;
     }
-    
-button.return-button {
-    position: absolute;
-    top: 10px; 
-    left: 10px; 
-    padding: 20px 35px;
-    font-size: 20px;
-    background-color: #5aa4dddc;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    z-index: 1;
-    overflow: hidden;
-}
 
-button.return-button:before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background-color: #fff;
-    opacity: 0.3;
-    border-radius: 50%;
-    transform: scale(0);
-    transition: transform 0.5s ease-out;
-}
+    button.return-button {
+      position: absolute;
+      top: 20px;
+      left: 5px;
+      padding: 20px 35px;
+      font-size: 20px;
+      background-color: #5aa4dddc;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      z-index: 1;
+      overflow: hidden;
+    }
 
-button.return-button:hover:before {
-    transform: scale(1);
-}
+    button.return-button:before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background-color: #fff;
+      opacity: 0.3;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.5s ease-out;
+    }
 
-button.return-button:hover {
-    background-color: #207bc5f5;
-}
+    button.return-button:hover:before {
+      transform: scale(1);
+    }
 
-button.return-button b {
-    position: relative;
-    z-index: 2;
-} 
-#suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 5px 5px;
-  z-index: 9999;
-}
+    button.return-button:hover {
+      background-color: #207bc5f5;
+    }
 
-.suggestion {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.suggestion:hover {
-  background-color: #f2f2f2;
-}
-
+    button.return-button b {
+      position: relative;
+      z-index: 2;
+    }
   </style>
   <script>
+    function openSettings() {
+      var settingsPage = document.querySelector('.settings-page');
+      settingsPage.style.display = 'block';
+    }
 
-function openSettings() {
-            var settingsPage = document.querySelector('.settings-page');
-            settingsPage.style.display = 'block';
-        }
-
-        function closeSettings() {
-            var settingsPage = document.querySelector('.settings-page');
-            settingsPage.style.display = 'none';
-        }
+    function closeSettings() {
+      var settingsPage = document.querySelector('.settings-page');
+      settingsPage.style.display = 'none';
+    }
 
     function toggleDarkMode() {
       var body = document.querySelector('body');
@@ -493,7 +510,7 @@ function openSettings() {
     }
 
     // Retrieve the dark mode preference from localStorage and apply the dark mode on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       var body = document.querySelector('body');
       var darkMode = localStorage.getItem('darkMode');
 
@@ -501,44 +518,33 @@ function openSettings() {
         body.classList.add('dark-mode');
       }
     });
+
     function searchFun() {
-  let filter = document.getElementById('myInput').value.toUpperCase();
-  let mytable = document.getElementById('mytable');
-  let tr = mytable.getElementsByTagName('tr');
+      let filter = document.getElementById('myInput').value.toUpperCase();
+      let mytable = document.getElementById('mytable');
+      let tr = mytable.getElementsByTagName('tr');
 
-  for (var i = 0; i < tr.length; i++) {
-    let td = tr[i].getElementsByTagName('td')[1];
+      for (var i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td')[1];
 
-    if (td) {
-      let textvalue = td.textContent || td.innerHTML;
+        if (td) {
+          let textvalue = td.textContent || td.innerText;
 
-      if (textvalue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
+          if (textvalue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+
+      // Display product table if filter is not empty
+      if (filter.length > 0) {
+        mytable.style.display = "table";
       } else {
-        tr[i].style.display = "none";
+        mytable.style.display = "none";
       }
     }
-  }
-
-  // Display product search suggestions
-  let suggestionsContainer = document.getElementById('suggestions');
-  suggestionsContainer.innerHTML = '';
-
-  if (filter.length > 0 && Array.isArray(productSuggestions) && productSuggestions.length > 0) {
-    productSuggestions.forEach((product) => {
-      let suggestion = document.createElement('div');
-      suggestion.textContent = product.product_name;
-      suggestion.classList.add('suggestion');
-      suggestion.addEventListener('click', function () {
-        document.getElementById('myInput').value = this.textContent;
-        searchFun();
-      });
-
-      suggestionsContainer.appendChild(suggestion);
-    });
-  }
-}
-
 
     function clearSearch() {
       var input = document.getElementById('myInput');
@@ -549,6 +555,9 @@ function openSettings() {
       for (var i = 0; i < tr.length; i++) {
         tr[i].style.display = "";
       }
+
+      // Hide the product table
+      document.getElementById('mytable').style.display = "none";
     }
 
     function showAddGroupForm() {
@@ -564,29 +573,57 @@ function openSettings() {
     function confirmRemove() {
       return confirm("Are you sure you want to remove this group?");
     }
-  </script>
+    function open() {
 
+    }
+  </script>
 </head>
 
 <body>
   <button class="settings-button" onclick="openSettings()">Settings</button>
   <button class="return-button" onclick="window.location.href = 'index.html'">Back</button>
 
-     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <h2><em>Welcome To My Data</em></h2>
-                    <hr>
-                    <div class="search-container">
-  <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
-  <span class="close-button" onclick="clearSearch()">&times;</span>
-  <button onclick="searchFun()" class="btn btn-primary search-button">
-    <i class="fas fa-search"></i>
-  </button>
-</div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <h2><em>Welcome To My Data</em></h2>
+          <hr>
+          <div class="search-container">
+            <input type="text" id="myInput" class="form-control search-input" placeholder="Search">
+            <span class="close-button" onclick="clearSearch()">&times;</span>
+            <button onclick="searchFun()" class="btn btn-primary search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
 
-<div id="suggestions"></div>
+          <table class="table" id="mytable" style="display: none;">
+            <thead class="thead-dark">
+              <tr>
+                <th colspan="3">suggestions !</th>
+              </tr>
+              <tr>
+                <th>No</th>
+                <th>Product Name</th>
+                <th>Group Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              if (!empty($products)) {
+                foreach ($products as $product) {
+                  echo "<tr>
+                <td>" . $product["id"] . "</td>
+                <td>" . $product["product_name"] . "</td>
+                <td>" . $product["groupname"] . "</td>
+              </tr>";
+                }
+              }
+              ?>
+
+            </tbody>
+          </table>
+
 
 
           <div class="add-group-form" style="display: none;">
@@ -595,57 +632,40 @@ function openSettings() {
               <input type="submit" class="btn btn-primary" value="Create">&nbsp;
               <button onclick="backspace()" class="btn btn-secondary">Back</button>
             </form>
-                    </div>
+          </div>
 
-                    <button onclick="showAddGroupForm()" class="btn btn-primary add-group">+ Add Group</button>
+          <button onclick="showAddGroupForm()" class="btn btn-primary add-group">+ Add Group</button>
           <br>
+
           <h3><i>My Data Groups</i></h3>
           <div class="container">
-            <table class="table" id="mytable">
+            <table class="table">
               <thead class="thead-dark">
                 <tr>
                   <th>No:</th>
                   <th>Group Name</th>
-                  <th>Open</th>
-                  <th>Delete</th>
+                  <th>Action</th>
+                  <th>Kill</th>
                 </tr>
               </thead>
               <tbody>
-              <?php
-                $servername = "mysql_db";
-                $username = "root";
-                $password = "root";
-                $database = "ashii";
-
-                // Create connection
-                $conn = new mysqli($servername, $username, $password, $database);
-
-                // Check connection
-                if ($conn->connect_error) {
-                  die("Connection failed: " . $conn->connect_error);
+                <?php
+                foreach ($groupNames as $id => $group) {
+                  echo "<tr>
+          <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>" . $id . "</a></td>
+          <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>" . $group . "</a></td>
+          <td><a href='product.php?groupid=" . urlencode($id) . "&groupname=" . urlencode($group) . "' class='custom-link'>
+          <button class='btn btn-primary search-button'>Open</button></a></td>
+          <td><a href='group.php?gn=" . urlencode($group) . "' onclick='return confirmRemove();' class='btn btn-red search-button'>Remove</a></td>
+                       </tr>";
                 }
-
-                $sql = "SELECT * FROM `groups`";
-                $result = $conn->query($sql);
-
-
-                if ($result->num_rows > 0) {
-                  while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
-                      <td>" . $row["id"] . "</td>
-                      <td>" . $row["groupname"] . "</td>
-                      <td><a href=\"product.php?groupid=" . $row["id"] . "\" class=\"custom-link\"><button class=\"search-button\">open</button></a></td>
-                      <td><a href='group.php?gn=" . $row["groupname"] . "' onclick='return confirmRemove();' class=\"btn btn-red search-button\">Remove</a></td>
-                    </tr>";
-                  }
-                } else {
-                  echo "<tr><td colspan='4'>No groups found</td></tr>";
-                }
-
-                $conn->close();
                 ?>
+
+
               </tbody>
             </table>
+
+
           </div>
           <?php
           if (isset($message)) {
@@ -656,23 +676,19 @@ function openSettings() {
             echo "<center><p>" . $deleteMessage . "</p></center>";
           }
           ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+      </div>
     </div>
+  </div>
+
   <div class="settings-page" style="display: none;">
-    <span class="close-button" onclick="closeSettings()">&times;</span>
+    <!-- <span class="close-button" onclick="closeSettings()">&times;</span> -->
     <h2>Settings</h2>
     <ul>
       <li>
         <label>
           <input type="checkbox" name="darkMode" onclick="toggleDarkMode()"> Dark Mode
         </label>
-
       </li>
       <li>
         <label>

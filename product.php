@@ -83,6 +83,8 @@ if (!empty($product_name)) {
   $query = "DELETE FROM device WHERE product_name = ?";
   $stmt = $conn->prepare($query);
   $stmt->bind_param("s", $product_name);
+  $stmt->bind_param("s", $groupid);
+
   $stmt->execute();
 
   if ($stmt->affected_rows > 0) {
@@ -125,11 +127,17 @@ if (!empty($groupid)) {
   $stmt->close();
 
   if (!empty($product_name)) {
-    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id AND device.product_name = ? ORDER BY device.id";
+    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname 
+    FROM device, `groups` 
+    WHERE device.groupid = ? AND device.groupid = `groups`.id";
+
     $stmt = $conn->prepare($productQuery);
     $stmt->bind_param("ss", $groupid, $product_name);
   } else {
-    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname FROM device, `groups` WHERE device.groupid = ? AND device.groupid = `groups`.id ORDER BY device.id";
+    $productQuery = "SELECT device.id, device.product_name, `groups`.groupname 
+                 FROM device, `groups` 
+                 WHERE device.groupid = ? AND device.groupid = `groups`.id";
+
     $stmt = $conn->prepare($productQuery);
     $stmt->bind_param("s", $groupid);
   }
@@ -140,6 +148,7 @@ if (!empty($groupid)) {
 
   $conn->close();
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -153,7 +162,7 @@ if (!empty($groupid)) {
 
   <style>
     body {
-      font-size: 24px;
+      font-size: 30px;
       background-color: #91ec7e;
       transition: background-color 0.3s, color 0.3s;
       margin: 0;
@@ -168,7 +177,7 @@ if (!empty($groupid)) {
     .switch {
       position: absolute;
       top: 15px;
-      right: 5px;
+      right: 6px;
       display: inline-block;
       width: 100px;
       height: 60px;
@@ -231,7 +240,7 @@ if (!empty($groupid)) {
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       padding: 40px;
       text-align: center;
-      width: 800px;
+      /* width: 800px; */
     }
     
 .card.dark-mode {
@@ -264,30 +273,35 @@ if (!empty($groupid)) {
   .add-group-form input[type="submit"],
   .add-group-form button {
     font-size: 24px; /* Increase the font size for the input field, create button, and back button */
-    padding: 12px 24px; /* Increase the padding for the input field, create button, and back button */
+    padding: 12px 20px; /* Increase the padding for the input field, create button, and back button */
     margin-bottom: 10px; /* Add some spacing between the elements */
-    width: 400px; /* Adjust the width value as per your requirement */
+    width: 300px; /* Adjust the width value as per your requirement */
   }
   
-
-  /* Media queries for different screen sizes */
-  @media (max-width: 480px) {
-    .card {
-      padding: 10px;
+   /* Media queries for different screen sizes */
+   @media (max-width: 480px) {
+      .card {
+        padding: 10px;
+      }
     }
-  }
 
-  @media (min-width: 481px) and (max-width: 768px) {
-    .card {
-      padding: 15px;
+    @media (min-width: 481px) and (max-width: 768px) {
+      .card {
+        padding: 15px;
+      }
     }
-  }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .card {
-      padding: 25px;
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .card {
+        padding: 25px;
+      }
     }
-  }
+
+    @media (min-width: 1025px) {
+      .card {
+        padding: 40px;
+      }
+    }
     .search-container {
       position: relative;
       display: flex;
@@ -343,7 +357,7 @@ if (!empty($groupid)) {
 
     .table {
       width: 100%;
-      font-size: 24px;
+      font-size: 28px;
       border-collapse: collapse;
       margin: 20px auto;
     }
@@ -365,7 +379,7 @@ if (!empty($groupid)) {
     }
 
     .btn {
-      padding: 20px 40px;
+      padding: 10px 30px;
       font-size: 24px;
     }
 
@@ -402,7 +416,7 @@ if (!empty($groupid)) {
       font-size: 32px;
     }
   </style>
-  <script>
+   <script>
     function toggleDarkMode() {
     var body = document.querySelector('body');
     var card = document.querySelector('.card');
@@ -565,7 +579,7 @@ if (!empty($groupid)) {
               </p>
             </center>
           <?php endif; ?>
-
+          
         </div>
       </div>
     </div>
