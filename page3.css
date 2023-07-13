@@ -1,0 +1,139 @@
+/* page3.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #50cceb;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+.contact-form {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    height: 120px;
+}
+
+.form-group button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-group button:hover {
+    background-color: #45a049;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.image-gallery img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.image-gallery .no-images {
+    text-align: center;
+    color: #fffcfc;
+}
+
+@media (max-width: 767px) {
+    .image-gallery img {
+        width: 100%;
+        height: auto;
+    }
+}
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .contact-form,
+.dark-mode .form-group input,
+.dark-mode .form-group textarea,
+.dark-mode .form-group label,
+.dark-mode .form-group button
+{
+    color: #fff;
+    background-color: #0c0a0a;
+    border-color: #c09292;
+}
+
+.dark-mode .form-group button {
+    background-color: #45a049;
+}
+
+.dark-mode .image-gallery img {
+    border-radius: 5px;
+}
+
+.dark-mode .no-images {
+    color: #fff;
+}
+.image-gallery{
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.dark-mode.image-gallery {
+    background-color: #0c0a0a;
+    color: #fffdfd;
+}
+
+
+.dark-mode .card-body{
+    background-color: #2b2d38;
+}
+
+
+.card-body{
+    background-color: #d6c2c2;
+}
