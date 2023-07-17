@@ -1,4 +1,7 @@
 <?php
+ini_set('upload_max_filesize', '8M'); // Set maximum upload file size to 8MB
+ini_set('post_max_size', '8M'); // Set maximum POST data size to 8MB
+
 $servername = "mysql_db";
 $username = "root";
 $password = "root";
@@ -40,21 +43,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
-            // Upload the image file
-            $targetDir = "uploads/";
-            $targetFile = $targetDir . basename($image['name']);
+            // Check file size
+            $maxFileSize = 8 * 1024 * 1024; // 8MB
 
-            if (move_uploaded_file($image['tmp_name'], $targetFile)) {
-                // Insert the upload details into the upload table
-                $insertQuery = "INSERT INTO `upload` (product_id, image, heading, description) VALUES (?, ?, ?, ?)";
-                $stmt = $conn->prepare($insertQuery);
-                $stmt->bind_param("isss", $product_id, $image['name'], $_POST['heading'], $_POST['description']);
-                $stmt->execute();
-                $stmt->close();
+            if ($image['size'] > $maxFileSize) {
+                $errorMsg = "File size exceeds the maximum limit (8MB).";
+            } elseif (!in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png'])) {
+                $errorMsg = "Only JPG, JPEG, and PNG files are allowed.";
             } else {
-                // Handle file upload error
-                die("File upload failed.");
+                // File upload logic here
+                // Upload the image file
+                $targetDir = "uploads/";
+                $targetFile = $targetDir . basename($image['name']);
+
+                if (move_uploaded_file($image['tmp_name'], $targetFile)) {
+                    // Insert the upload details into the upload table
+                    $insertQuery = "INSERT INTO `upload` (product_id, image, heading, description) VALUES (?, ?, ?, ?)";
+                    $stmt = $conn->prepare($insertQuery);
+                    $stmt->bind_param("isss", $product_id, $image['name'], $_POST['heading'], $_POST['description']);
+                    $stmt->execute();
+                    $stmt->close();
+                    // Redirect to the same page to prevent duplicate form submission
+                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    exit;
+                } else {
+                    // Handle file upload error
+                    $errorMsg = "File upload failed.";
+                }
             }
+        } else {
+            // Handle empty file error
+            $errorMsg = "Please select an image to upload.";
+        }
+
+        // Check if there is an error message
+        if (isset($errorMsg)) {
+            $_SESSION['uploadErrorMessage'] = $errorMsg;
+            // Redirect to the same page to display the error message
+            header("Location: ".$_SERVER['REQUEST_URI']);
+            exit;
         }
     } elseif (isset($_POST['editImage'])) {
         // Edit image
@@ -62,21 +89,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
-            // Upload the image file
-            $targetDir = "uploads/";
-            $targetFile = $targetDir . basename($image['name']);
+            // Check file size
+            $maxFileSize = 8 * 1024 * 1024; // 8MB
 
-            if (move_uploaded_file($image['tmp_name'], $targetFile)) {
-                // Update the image in the upload table
-                $updateQuery = "UPDATE `upload` SET image = ? WHERE product_id = ?";
-                $stmt = $conn->prepare($updateQuery);
-                $stmt->bind_param("si", $image['name'], $product_id);
-                $stmt->execute();
-                $stmt->close();
+            if ($image['size'] > $maxFileSize) {
+                $errorMsg = "File size exceeds the maximum limit (8MB).";
+            } elseif (!in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png'])) {
+                $errorMsg = "Only JPG, JPEG, and PNG files are allowed.";
             } else {
-                // Handle file upload error
-                die("File upload failed.");
+                // Upload the image file
+                $targetDir = "uploads/";
+                $targetFile = $targetDir . basename($image['name']);
+
+                if (move_uploaded_file($image['tmp_name'], $targetFile)) {
+                    // Update the image in the upload table
+                    $updateQuery = "UPDATE `upload` SET image = ? WHERE product_id = ?";
+                    $stmt = $conn->prepare($updateQuery);
+                    $stmt->bind_param("si", $image['name'], $product_id);
+                    $stmt->execute();
+                    $stmt->close();
+                    // Redirect to the same page to prevent duplicate form submission
+                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    exit;
+                } else {
+                    // Handle file upload error
+                    $errorMsg = "File upload failed.";
+                }
             }
+        } else {
+            // Handle empty file error
+            $errorMsg = "Please select an image to upload.";
+        }
+
+        // Check if there is an error message
+        if (isset($errorMsg)) {
+            $_SESSION['uploadErrorMessage'] = $errorMsg;
+            // Redirect to the same page to display the error message
+            header("Location: ".$_SERVER['REQUEST_URI']);
+            exit;
         }
     } elseif (isset($_POST['editHeading'])) {
         // Edit heading
@@ -90,6 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("si", $heading, $product_id);
             $stmt->execute();
             $stmt->close();
+            // Redirect to the same page to prevent duplicate form submission
+            header("Location: ".$_SERVER['REQUEST_URI']);
+            exit;
         }
     } elseif (isset($_POST['editDescription'])) {
         // Edit description
@@ -103,6 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("si", $description, $product_id);
             $stmt->execute();
             $stmt->close();
+            // Redirect to the same page to prevent duplicate form submission
+            header("Location: ".$_SERVER['REQUEST_URI']);
+            exit;
         }
     } elseif (isset($_POST['removeUpload'])) {
         // Remove upload
@@ -111,15 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("i", $product_id);
         $stmt->execute();
         $stmt->close();
+        // Redirect to the same page to prevent duplicate form submission
+        header("Location: ".$_SERVER['REQUEST_URI']);
+        exit;
     }
-
-    // Redirect back to the product page
-    header("Location: detail.php?product_id=" . urlencode($product_id) . "&product_name=" . urlencode($productDetails['product_name']));
-    exit();
 }
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -148,6 +204,10 @@ $conn->close();
                     <h3>Group: <?php echo $productDetails['groupname']; ?></h3><br>
 
                     <div class="image-gallery">
+                        <?php if (isset($_SESSION['uploadErrorMessage'])): ?>
+                            <div class="alert alert-danger"><?php echo $_SESSION['uploadErrorMessage']; ?></div>
+                            <?php unset($_SESSION['uploadErrorMessage']); ?>
+                        <?php endif; ?>
                         <?php if ($uploadDetails): ?>
                             <div class="card mb-3">
                                 <img src="uploads/<?php echo $uploadDetails['image']; ?>" class="card-img-top">
@@ -219,8 +279,5 @@ $conn->close();
             </div>
         </div>
     </div>
-
-  
 </body>
-
 </html>
