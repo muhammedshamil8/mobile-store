@@ -29,7 +29,7 @@ input:checked+.slider:before {
 .settings-button {
   position: absolute;
   top: 20px;
-  right: 5px;
+  right: 15px;
   background-color: #2196F3;
   color: #fff;
   border: none;
@@ -42,7 +42,7 @@ input:checked+.slider:before {
 }
 
 .settings-button:hover {
-  background-color: #0077C2;
+  background-color: #2dc200;
 }
 
 .card {
@@ -75,8 +75,8 @@ input:checked+.slider:before {
   margin-top: 20px;
 }
 
-.add-group:hover {
-  background-color: #0077C2;
+.add-group:hover  {
+  background-color: #12c402f5;
 }
 
 .add-group-form {
@@ -218,7 +218,7 @@ input:checked+.slider:before {
 }
 
 .search-button:hover {
-  background-color: #0077C2;
+  background-color: #6a57d6e8;
 }
 
 .add-group-form {
@@ -250,13 +250,13 @@ color: #ffffff;
 }
 
 .table th {
-background-color: #061148;
+background-color: #0c1b64;
 color: #ffffff;
 font-weight: bold;
 }
 
 .table.dark-mode th {
-background-color: #061148;
+background-color: #04090e;
 color: #ffffff;
 font-weight: bold;
 }

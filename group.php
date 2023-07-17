@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 error_reporting(0);
 
@@ -149,8 +149,12 @@ $conn->close();
 </head>
 
 <body>
-  <button class="settings-button" onclick="openSettings()">Settings</button>
-  <button class="return-button" onclick="window.location.href = 'index.html'">Back</button>
+  <button class="settings-button" class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i> </button>
+  <button class="return-button" onclick="window.location.href = 'index.html'" class="back-btn">
+  <i class="fas fa-chevron-left"></i></button>
+  
+
+
 
   <div class="container">
     <div class="row justify-content-center">

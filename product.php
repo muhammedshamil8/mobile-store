@@ -298,10 +298,10 @@ $conn->close();
                                         $counter++;
                                     }
                                 } else {
-                                    echo "<tr><td colspan='4'>No products found for this group</td></tr>";
+                                    echo "<tr><td colspan='5'>No products found for this group</td></tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='4'>No products found</td></tr>";
+                                echo "<tr><td colspan='5'>No products found</td></tr>";
                             }
                             ?>
 
