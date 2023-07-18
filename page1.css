@@ -1,6 +1,6 @@
 /* page1.css */
 body {
-  font-size: 20px;
+  font-size: 30px;
   background-color: #afd2ee;
   transition: background-color 0.3s, color 0.3s;
   margin: 0;
@@ -35,7 +35,7 @@ input:checked+.slider:before {
   border: none;
   border-radius: 5px;
   padding: 20px 30px;
-  font-size: 20px;
+  font-size: 25px;
   cursor: pointer;
   transition: background-color 0.3s;
   z-index: 9999;
@@ -69,7 +69,7 @@ input:checked+.slider:before {
   border: none;
   border-radius: 5px;
   padding: 20px 40px;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
   transition: background-color 0.3s;
   margin-top: 20px;
@@ -88,7 +88,7 @@ input:checked+.slider:before {
 .add-group-form input[type="text"],
 .add-group-form input[type="submit"],
 .add-group-form button {
-  font-size: 24px;
+  font-size: 26px;
   padding: 12px 24px;
   margin-bottom: 10px;
   width: 400px;
@@ -267,7 +267,7 @@ border-collapse: collapse;
 margin: 25px 0;
 font-size: 0.9em;
 font-family: sans-serif;
-width: 100%;
+width: 700px;
 box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 table-layout: fixed;
 }
@@ -291,10 +291,11 @@ padding: 12px 15px;
 .styled-table td {
 padding: 12px 0;
 position: relative;
+
 }
 
 .styled-table tbody tr {
-border-bottom: thin solid #dddddd;
+border-bottom: 1px solid #dddddd;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
@@ -334,7 +335,7 @@ font-size: 20px;
 background-color: red;
 color: white;
 padding: 12px 22px;
-font-size: 21px;
+font-size: 25px;
 border-radius: 6px;
 position: absolute;
 top: 12px;
