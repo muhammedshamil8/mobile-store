@@ -42,3 +42,4 @@ function removeUpload() {
       form.submit();
   }
 }
+// completed the project

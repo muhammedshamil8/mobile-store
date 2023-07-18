@@ -279,5 +279,6 @@ $conn->close();
             </div>
         </div>
     </div>
+    <!--completed the project-->
 </body>
 </html>

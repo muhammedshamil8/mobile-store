@@ -80,3 +80,4 @@ function toggleDarkMode() {
       function confirmRemove() {
         return confirm("Are you sure you want to remove this product?");
       }
+      // completed the project

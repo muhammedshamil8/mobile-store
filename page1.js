@@ -106,3 +106,4 @@ darkModeCheckbox.checked = darkMode === 'true';
   function open() {
 
   }
+  // completed the project
