@@ -9,4 +9,5 @@ step 4: Opening a specific group
 step 5:Searching for similar product names on main page 
 step 6: styled the pages with beutiful color and setted dark mode 
 step 7: add new page for details of product
-step 8: 
+step 8: add image upload/remove/edit option 
+step 9: project completed ;
