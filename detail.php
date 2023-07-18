@@ -1,6 +1,6 @@
 <?php
-ini_set('upload_max_filesize', '8M'); // Set maximum upload file size to 8MB
-ini_set('post_max_size', '8M'); // Set maximum POST data size to 8MB
+ini_set('upload_max_filesize', '30M'); // Set maximum upload file size to 15MB
+ini_set('post_max_size', '30M'); // Set maximum POST data size to 15MB
 
 $servername = "mysql_db";
 $username = "root";
@@ -44,14 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
             // Check file size
-            $maxFileSize = 8 * 1024 * 1024; // 8MB
+            $maxFileSize = 30 * 1024 * 1024; // 15MB
 
             if ($image['size'] > $maxFileSize) {
-                $errorMsg = "File size exceeds the maximum limit (8MB).";
+                $errorMsg = "File size exceeds the maximum limit (30MB).";
             } elseif (!in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png'])) {
                 $errorMsg = "Only JPG, JPEG, and PNG files are allowed.";
             } else {
-                // File upload logic here
                 // Upload the image file
                 $targetDir = "uploads/";
                 $targetFile = $targetDir . basename($image['name']);
@@ -90,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
             // Check file size
-            $maxFileSize = 8 * 1024 * 1024; // 8MB
+            $maxFileSize = 30 * 1024 * 1024; // 15MB
 
             if ($image['size'] > $maxFileSize) {
-                $errorMsg = "File size exceeds the maximum limit (8MB).";
+                $errorMsg = "File size exceeds the maximum limit (30MB).";
             } elseif (!in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png'])) {
                 $errorMsg = "Only JPG, JPEG, and PNG files are allowed.";
             } else {
@@ -176,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -231,7 +229,7 @@ $conn->close();
                             <form class="my-s" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="image">Choose an image:</label>
-                                    <input type="file" name="image" class="form-control" id="image" required>
+                                    <input type="file" name="image" accept="image/*"  class="form-control" id="image" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="heading">Heading:</label>
@@ -254,7 +252,7 @@ $conn->close();
                             <form class="my-s" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="image">Change the image:</label>
-                                    <input type="file" name="image" class="form-control" id="image">
+                                    <input type="file" name="image" accept="image/*"  class="form-control" id="image">
                                     <button type="submit" name="editImage" class="btn btn-primary mt-2">Save</button>
                                 </div>
                             </form>
