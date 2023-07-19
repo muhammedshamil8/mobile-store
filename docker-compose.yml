@@ -2,9 +2,10 @@ version: '3.7'
 
 services:
   php-env:
-    build: .
+    # build: .
+    image: harbor.strikerlulu.me/cubet/laravel_apache
     volumes:
-      - ./:/var/www/html
+      - ./:/var/www/html/src/public
     ports:
       - 9000:80
 
