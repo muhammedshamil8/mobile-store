@@ -6,10 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $groupname = $_POST['groupname'];
 
   if (!empty($groupname)) {
-    $servername = "mysql_db";
-    $username = "root";
-    $password = "root";
-    $database = "ashii";
+     include 'console.php'; 
 
     // create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -53,10 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $groupname = $_GET['gn'];
 
 if (!empty($groupname)) {
-  $servername = "mysql_db";
-  $username = "root";
-  $password = "root";
-  $database = "ashii";
+   include 'console.php'; 
 
   // Create connection
   $conn = new mysqli($servername, $username, $password, $database);
@@ -83,10 +77,7 @@ if (!empty($groupname)) {
 
 
 // Retrieve all groups
-$servername = "mysql_db";
-$username = "root";
-$password = "root";
-$database = "ashii";
+ include 'console.php'; 
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);

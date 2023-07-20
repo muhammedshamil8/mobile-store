@@ -2,10 +2,7 @@
 ini_set('upload_max_filesize', '30M'); // Set maximum upload file size to 15MB
 ini_set('post_max_size', '30M'); // Set maximum POST data size to 15MB
 
-$servername = "mysql_db";
-$username = "root";
-$password = "root";
-$database = "ashii";
+ include 'console.php'; 
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {

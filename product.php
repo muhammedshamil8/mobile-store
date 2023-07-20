@@ -11,10 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $groupname = $_POST['groupname'];
 
     if (!empty($product_name) && !empty($groupname)) {
-        $servername = "mysql_db";
-        $username = "root";
-        $password = "root";
-        $database = "ashii";
+         include 'console.php'; 
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $database);
@@ -62,10 +59,7 @@ $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 if (!empty($product_name)) {
     $groupid = $_GET['groupid'];
 
-    $servername = "mysql_db";
-    $username = "root";
-    $password = "root";
-    $database = "ashii";
+     include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -100,10 +94,7 @@ if (!empty($product_name)) {
 $groupid = $_GET['groupid'];
 
 if (!empty($groupid)) {
-    $servername = "mysql_db";
-    $username = "root";
-    $password = "root";
-    $database = "ashii";
+     include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -144,10 +135,7 @@ if (!empty($groupid)) {
     $conn->close();
 
     // Retrieve all groups
-    $servername = "mysql_db";
-    $username = "root";
-    $password = "root";
-    $database = "ashii";
+     include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -173,10 +161,7 @@ ORDER BY device.id";
 
     $conn->close();
 
-$servername = "mysql_db";
-$username = "root";
-$password = "root";
-$database = "ashii";
+     include 'console.php'; 
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
