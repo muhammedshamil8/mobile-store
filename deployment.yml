@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mobile-store
+  namespace: shamil
 spec:
   replicas: 1
   selector:
@@ -18,6 +19,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: 127.0.0.1
         - name: mysql
           image: mysql:latest
           env:
@@ -37,6 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mobile-store-service
+  namespace: shamil
 spec:
   selector:
     app: mobile-store
@@ -49,6 +54,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mobile-store
+  namespace: shamil
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
