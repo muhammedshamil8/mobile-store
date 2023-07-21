@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobile-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mobile-store
+  template:
+    metadata:
+      labels:
+        app: mobile-store
+    spec:
+      containers:
+        - name: nginx-php
+          image: harbor.strikerlulu.me/coding-strikerz/mobile-store:v3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: moblle_store
+            - name: MYSQL_USER
+              value: shamil
+            - name: MYSQL_PASSWORD
+              value: root
+          ports:
+            - containerPort: 3306
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mobile-store-service
+spec:
+  selector:
+    app: mobile-store
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mobile-store
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: mobile-store.k.strikerlulu.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mobile-store-service
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+      - mobile-store.k.strikerlulu.me
+      secretName: mobile-store-ingress-cert
+

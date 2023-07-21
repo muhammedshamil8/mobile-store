@@ -1,0 +1,7 @@
+FROM trafex/php-nginx:latest
+
+COPY . /var/www/html
+
+WORKDIR /var/www/html
+
+RUN sed -i 's/mysql_db/127.0.0.1//' console.php
