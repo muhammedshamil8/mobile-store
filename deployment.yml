@@ -24,6 +24,9 @@ spec:
           env:
             - name: MYSQL_HOST
               value: 127.0.0.1
+          volumeMounts:
+            - name: mobile-store-upload-volume
+              mountPath: /var/www/html/uploads # Replace with the path where you want to mount the PV inside the container
         - name: mysql
           image: mysql:latest
           lifecycle:
@@ -41,6 +44,16 @@ spec:
               value: root
           ports:
             - containerPort: 3306
+          volumeMounts:
+            - name: mobile-store-db-volume
+              mountPath: /var/lib/mysql # Replace with the path where you want to mount the PV inside the container
+      volumes:
+        - name: mobile-store-upload-volume
+          persistentVolumeClaim:
+            claimName: mobile-store-uploads
+        - name: mobile-store-db-volume
+          persistentVolumeClaim:
+            claimName: mobile-store-db
 
 ---
 apiVersion: v1
@@ -80,4 +93,49 @@ spec:
     - hosts:
       - mobile-store.k.strikerlulu.me
       secretName: mobile-store-ingress-cert
-
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mobile-store-uploads
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/mobile-store/uploads # Replace with the actual host path
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mobile-store-uploads
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # Adjust the storage size as needed
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mobile-store-db
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/mobile-store/db # Replace with the actual host path
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mobile-store-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # Adjust the storage size as needed
