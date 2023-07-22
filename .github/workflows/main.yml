@@ -42,16 +42,23 @@ jobs:
           tags: harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }}
           platforms: linux/arm64
 
-      - name: Configure Kubernetes cluster
-        run: |
-          echo "$KUBECONFIG" | base64 --decode > kubeconfig.yaml
+      # - name: Configure Kubernetes cluster
+      #   run: |
+      #     echo "$KUBECONFIG" | base64 --decode > kubeconfig.yaml
 
       - name: Update image tag in deployment.yml
         run: |
           sed -i "s|image: harbor.strikerlulu.me/coding-strikerz/mobile-store:.*|image: harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }}|" deployment.yml
 
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Change context
+        run: |
+          kubectl config use-context oracle
 
       - name: Deploy to Kubernetesa
         run: |
