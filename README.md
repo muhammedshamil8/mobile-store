@@ -11,3 +11,14 @@
 - step 7: add new page for details of product
 - step 8: add image upload/remove/edit option 
 - step 9: Finally Completed The project ;
+
+## Test demo locally
+```sh
+git clone git@github.com:muhammedshamil8/mobile-store.git
+cd mobile-store
+docker-compose up
+# import table structure
+mysql -proot mobile_store < db.sql
+now visit http://lcoalhost:9000
+```
+
