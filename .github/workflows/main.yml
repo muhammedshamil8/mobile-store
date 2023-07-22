@@ -35,6 +35,7 @@ jobs:
       - name: Build and push
         uses: depot/build-push-action@v1
         with:
+          token: ${{ secrets.DEPOT_TOKEN }}
           project: ll2tdnqtgh
           push: true
           file: Dockerfile.k8s
