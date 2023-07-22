@@ -62,7 +62,5 @@ jobs:
 
       - name: Deploy to Kubernetesa
         run: |
-          echo "$KUBECONFIG" > kube-config
-          cat kube-config
-          kubectl apply -f deployment.yml --kubeconfig=kube-config
+          kubectl apply -f deployment.yml
 
