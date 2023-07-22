@@ -24,10 +24,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        run: |
-          docker build -f Dockerfile.k8s -t harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }} .
-          docker push harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }}
+      # - name: Build and push Docker image
+      #   run: |
+      #     docker build -f Dockerfile.k8s -t harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }} .
+      #     docker push harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }}
+
+      - name: Build and push
+        uses: depot/build-push-action@v1
+        with:
+          project: ll2tdnqtgh
+          push: true
+          file: Dockerfile.k8s
+          tags: harbor.strikerlulu.me/coding-strikerz/mobile-store:${{ steps.generate_tag.outputs.TAG }}
+          platforms: linux/arm64
 
       - name: Configure Kubernetes cluster
         run: |
@@ -43,5 +52,6 @@ jobs:
       - name: Deploy to Kubernetesa
         run: |
           echo "$KUBECONFIG" > kube-config
+          cat kube-config
           kubectl apply -f deployment.yml --kubeconfig=kube-config
 
