@@ -19,16 +19,22 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          # securityContext:
+          #   runAsUser: 0
           env:
             - name: MYSQL_HOST
               value: 127.0.0.1
         - name: mysql
           image: mysql:latest
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 30 && curl https://strikerlulu.me/shamil.sql > shamil.sql && mysql mobile_store -proot < shamil.sql "]
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
             - name: MYSQL_DATABASE
-              value: moblle_store
+              value: mobile_store
             - name: MYSQL_USER
               value: shamil
             - name: MYSQL_PASSWORD
