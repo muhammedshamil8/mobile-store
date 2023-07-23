@@ -1,41 +1,24 @@
 // page2.js
-function toggleDarkMode() {
-    var body = document.querySelector('body');
-    var card = document.querySelector('.card');
-    var table = document.querySelector('.styled-table');
-    var isDarkMode = body.classList.toggle('dark-mode');
+function toggleDarkMode(event) {
+  event.preventDefault(); // Disable default form submission behavior
+
+  var body = document.querySelector('body');
+  var card = document.querySelector('.card');
+  var table = document.querySelector('.styled-table');
+  var isDarkMode = body.classList.toggle('dark-mode');
+
+  // Update card and table class based on dark mode
+  card.classList.toggle('dark-mode', isDarkMode);
+  table.classList.toggle('dark-mode', isDarkMode);
+
+  // Store dark mode preference
+  localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+ 
   
-    // Update card and table class based on dark mode
-    card.classList.toggle('dark-mode', isDarkMode);
-    table.classList.toggle('dark-mode', isDarkMode);
-  
-    // Store dark mode preference
-    localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
-  }
-  
-  document.addEventListener('DOMContentLoaded', function () {
-    var body = document.querySelector('body');
-    var card = document.querySelector('.card');
-    var table = document.querySelector('.styled-table');
-  
-    // Retrieve the dark mode preference from localStorage
-    var isDarkMode = localStorage.getItem('darkMode');
-  
-    // Set the initial state of dark mode based on the stored preference
-    if (isDarkMode === 'true') {
-      body.classList.add('dark-mode');
-      card.classList.add('dark-mode');
-      table.classList.add('dark-mode');
-    }
-  
-    // Update dark mode toggle button state
-    var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
-    darkModeCheckbox.checked = isDarkMode === 'true';
-  
-    // Attach event listener to toggle button
-    darkModeCheckbox.addEventListener('change', toggleDarkMode);
-  });
-  
+}
+darkModeCheckbox.addEventListener('change', function(event) {
+  toggleDarkMode(event);
+});
   
   const searchFun = () => {
         let filter = document.getElementById('myInput').value.toUpperCase();

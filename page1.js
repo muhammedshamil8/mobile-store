@@ -14,12 +14,17 @@ var body = document.querySelector('body');
 var card = document.querySelector('.card');
 var table1 = document.querySelector('.table');
 var table2 = document.querySelector('.styled-table');
+var headname = document.querySelector('.headname');
+var h1 = document.querySelector('.headname h1'); 
+var img = document.querySelector('.headname img'); 
 var darkMode = body.classList.toggle('dark-mode');
 
 // Update classes based on dark mode
 card.classList.toggle('dark-mode', darkMode);
 table1.classList.toggle('dark-mode', darkMode);
 table2.classList.toggle('dark-mode', darkMode);
+headname.classList.toggle('dark-mode', darkMode);
+
 
 // Update dark mode toggle button state
 var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
@@ -35,6 +40,7 @@ var body = document.querySelector('body');
 var card = document.querySelector('.card');
 var table1 = document.querySelector('.table');
 var table2 = document.querySelector('.styled-table');
+var headname = document.querySelector('.headname');
 var darkMode = localStorage.getItem('darkMode');
 
 if (darkMode === 'true') {
@@ -42,6 +48,7 @@ if (darkMode === 'true') {
   card.classList.add('dark-mode');
   table1.classList.add('dark-mode');
   table2.classList.add('dark-mode');
+  headname.classList.add('dark-mode');
 }
 
 // Update dark mode toggle button state
