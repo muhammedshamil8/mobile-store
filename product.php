@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $groupname = $_POST['groupname'];
 
     if (!empty($product_name) && !empty($groupname)) {
-         include 'console.php'; 
+        include 'console.php';
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $database);
@@ -20,12 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (mysqli_connect_error()) {
             die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
         } else {
-            $SELECT = "SELECT product_name FROM device WHERE product_name = ? LIMIT 1";
+            $SELECT = "SELECT product_name FROM device WHERE product_name = ? AND groupid = (SELECT id FROM `groups` WHERE groupname = ?) LIMIT 1";
             $INSERT = "INSERT INTO device (product_name, groupid) VALUES (?, (SELECT id FROM `groups` WHERE groupname = ?))";
 
             // Prepare statement
             $stmt = $conn->prepare($SELECT);
-            $stmt->bind_param("s", $product_name);
+            $stmt->bind_param("ss", $product_name, $groupname);
             $stmt->execute();
             $stmt->store_result();
             $rnum = $stmt->num_rows;
@@ -37,22 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bind_param("ss", $product_name, $groupname);
                 $stmt->execute();
 
-                $message = "New product added successfully";
+                $message = "New product '$product_name' added successfully";
                 $_SESSION['message'] = $message;
             } else {
-                $message = "Someone has already added a product with this name";
+                $message = "Someone has already added a product with the name '$product_name'";
                 $_SESSION['message'] = $message;
             }
             $stmt->close();
         }
-
     } else {
         $message = "All fields are required";
         $_SESSION['message'] = $message;
     }
 }
-
-
 
 $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 
@@ -198,7 +195,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-<title>Mobile-store</title>
+<title>product Mobile-store</title>
   <link rel="icon" href="image/mobilelogo77.png" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -208,11 +205,29 @@ $conn->close();
     <script src="page2.js"></script>
 </head>
 <body id="body">
-
+<header>
+    <nav >
+      <div class="container">
+        <ul>
+          <li><a href="group.php?userid=<?php echo $userId; ?>" class="btn btn-secondary">Groups</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="about.php">About</a></li>
+          <li style="float:left"><button class="logout-button"
+              onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
+          <li class="dropdown" style="float:right">
+          <li> <a class="active" href="">Product</a></li>
+            <button class="settings-button" class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+<!-- 
     <label class="switch">
-        <input type="checkbox" name="darkMode" checked>
+        <input type="checkbox" onclick="toggleDarkMode()" name="darkMode" checked>
         <span class="slider"></span>
-    </label>
+    </label> -->
 
     <div class="container">
         <div class="row justify-content-center">
@@ -220,34 +235,44 @@ $conn->close();
                 <div class="card">
         <div class="headname">
                 <img src="image/mobilelogo77.png" alt="project Logo"> <h1><em>Mobile-store </em></h1> </div>
-           
-                    <a href="group.php" class="btn btn-secondary">Groups</a><br>
-                    
-                    <div class="search-container mb-4">
+                <div class="button-container">
+  
+                   
+
+                    <div class="search-container mb-4"><br><br>
                         <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
                         <span class="close-button" onclick="clearSearch()">&times;</span>
-                        <button onclick="searchFun()" class="btn btn-primary search-button"><i class="fas fa-search"></i></button>
+                        <button onclick="searchFun()" class="search-button"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="add-group-form">
                         <form method="POST" action="">
+                        <label>Product Name:
                             <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
-                            <input type="text" name="groupname" placeholder="Group Name" required class="form-control mb-2">
+</label><br>
+                            <label>Group Name:
+                            <input type="text" name="groupname" placeholder="<?php echo $groupname; ?>" required class="form-control mb-2">
+ </label>
                             <div class="d-flex justify-content-between">
-                                <input type="submit" class="btn btn-primary" value="Create">
-                                <button onclick="backspace()" class="btn btn-secondary">Back</button>
+                                <input type="submit" class="btn btn-primaryy" value="Create"><br>
+                                <button onclick="backspace()" class="btn btn-secondaryy" >Back</button>
                             </div>
                         </form>
                     </div>
+                    
+  
+                              <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
 
-                    <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button>
-                    <h3 class="mb-3">Group: <?php echo $groupname; ?></h3>
+                    <!-- <h3 class="mb-3">★彡[ɢʀᴏᴜᴘ @ ]彡★</h3> -->
                     <div class="table-container">
                     <table class="styled-table" id="mytable">
                         <thead class="thead-dark">
-                            <tr>
+                            
+                            <tr class="header1"><th colspan="4" >🄶🅁🄾🅄🄿 :&nbsp;<?php echo $groupname; ?></th></tr>
+
+                            <tr class="header2">
                                 <th>No</th>
                                 <th>Product Name</th>
-                                <th>Group Name</th>
+                                <!-- <th>Group Name</th> -->
                                 <th>Action</th>
                                 <th>Delete</th>
                             </tr>
@@ -259,7 +284,7 @@ $conn->close();
                                     <tr class="active-row">
                                         <td><?php echo $counter; ?></td>
                                         <td><?php echo $row["product_name"]; ?></td>
-                                        <td><?php echo $row["groupname"]; ?></td>
+                                        
                                         <td>
                                             <a href='detail.php?product_id=<?php echo urlencode($row["id"]); ?>&product_name=<?php echo urlencode($row["product_name"]); ?>' class='custom-link'>
                                                 <button class='btn-blue'>Open</button>
@@ -274,7 +299,7 @@ $conn->close();
                                     <?php $counter++; ?>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <tr><td colspan='5'>No products found for this group</td></tr>
+                                <tr><td colspan='4'>No products found for this group</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -294,6 +319,34 @@ $conn->close();
         </div>
     </div> 
 
+    <div class="settings-page" style="display: none;">
+
+      <h2>Settings</h2>
+      <ol>
+        <li>
+          <label>
+            <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
+          </label>
+        </li><br>
+        <li>
+          <label>
+            <input type="checkbox" name="notifications"> Notifications
+          </label>
+        </li><br>
+        <li>
+          <label>
+            <input type="checkbox" name="privacy"> Privacy
+          </label>
+        </li><br>
+        <li>
+          <label>
+            <button class="return-button" onclick="closeSettings()">
+              <i class="fas fa-chevron-left"></i></button>
+          </label>
+        </li>
+      </ol>
+
+    </div>
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,3 +1,14 @@
+
+function openSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'block';
+}
+
+function closeSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'none';
+}
+
 function toggleDarkMode() {
   var body = document.querySelector('body');
   body.classList.toggle('dark-mode');
