@@ -2,15 +2,198 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #949398ff;
-    /* background-image: linear-gradient(to bottom right,#949398ff 50%, #f4df4eff 50%); 
-    background-size: 100% 100%; 
-    background-repeat: no-repeat;  */
     margin: 0;
     padding: 0;
 }
-.card-img-top{
-    color: #000;
+
+/* Common styles for navigation bar */
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #38444d;
+    padding: 2px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+    font-size: 15px;
 }
+
+.container {
+    max-width: 100%;
+    padding: 10px;
+    margin: 0;
+}
+
+/* Reset default list styles and add common styles for navigation bar */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #38444d;
+}
+
+li {
+    float: left;
+}
+
+li a,
+.dropbtn {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active),
+.dropdown:hover .dropbtn {
+    background-color: #111;
+}
+
+.active {
+    background-color: #04AA6D;
+    padding: 12px 16px;
+}
+
+/* Styles for dropdown menu */
+li.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Buttons styling */
+button {
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.settings-button {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+    background-color: #38444d;
+    color: #fff;
+    border-radius: 0px;
+    padding: 5px 23px;
+    font-size: 29px;
+    z-index: 999;
+}
+
+.settings-button:hover {
+    background-color: #1393c5;
+}
+
+.logout-button {
+    position: absolute;
+    background-color: #38444d;
+    color: #fff;
+    border-radius: 1px;
+    padding: 13px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 9999;
+    bottom: 13px;
+    right: 100px;
+}
+
+.logout-button:hover {
+    background-color: darkred;
+}
+/* Add responsive styles for the settings page */
+
+.return-button {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    padding: 15px 25px;
+    font-size: 20px;
+    background-color: #5aa4dddc;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center; 
+}
+
+.settings-page {
+    position: fixed;
+    top: 72px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 8px;
+    padding: 100px 60px;
+    text-align: center;
+    z-index: 9999;
+  }
+  
+  .settings-page h2 {
+    margin-top: 0;
+    font-size: 32px;
+  }
+  
+  .settings-page ol {
+    list-style-type: none;
+    padding: 0;
+    font-size: 24px;
+  }
+  
+  .settings-page li {
+    margin-bottom: 22px;
+    display: block;
+  }
+  
+  .settings-page li input[type="checkbox"] {
+    margin-right: 15px;
+    transform: scale(2);
+  }
+  
+ 
+/* Heading and logo styling */
+.headname {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(226, 223, 231);
+}
+
 .headname h1 {
     font-size: 32px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -24,63 +207,22 @@ body {
     border: 2px solid;
 }
 
-.headname {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    /* border-radius: 10px 10px 0 0; */
-    background-color: rgb(226, 223, 231); 
-    /* color: #fff; */
-}
-
-a{
-    text-decoration: none;
-}
-.btn-back {
-    position: absolute;
-  top: 20px;
-  left: 5px;
-  padding: 20px 35px;
-  font-size: 20px;
-  background-color: #1b80cedc;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  z-index: 1;
-  overflow: hidden;
-  text-align: center;
-}
-
-.btn-back:hover {
-    background-color: #0056b3;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-}
-
-@media (max-width: 767px) {
-    .container {
-        padding: 10px;
-    }
-}
-
+/* Contact form styling */
 .contact-form {
     background-color: #f7f4f4;
     border-radius: 5px;
     padding: 20px;
+    max-width: 800px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #333; /* Updated form text color */
+    color: #333;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+
+.contact-form h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .form-group {
@@ -91,7 +233,7 @@ h1 {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #333; /* Updated form label color */
+    color: #333;
 }
 
 .form-group input,
@@ -100,7 +242,7 @@ h1 {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: #333; /* Updated input text color */
+    color: #333;
 }
 
 .form-group textarea {
@@ -113,7 +255,6 @@ h1 {
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
-    cursor: pointer;
 }
 
 .form-group button:hover {
@@ -126,15 +267,19 @@ h1 {
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
-    cursor: pointer;
 }
 
+/* Image gallery styling */
 .image-gallery {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 20px;
+    text-align: center;
+    color: #000000;
+    background-color: #f7f4f4;
+    padding: 20px;
 }
 
 .image-gallery img {
@@ -144,24 +289,12 @@ h1 {
     border-radius: 5px;
 }
 
-.image-gallery {
-    text-align: center;
-    color: #fffcfc;
-}
-
 .no-images {
     text-align: center;
     color: #0b1233;
-    text-shadow: #4caf50;
 }
 
-@media (max-width: 767px) {
-    .image-gallery img {
-        width: 100%;
-        height: auto;
-    }
-}
-
+/* Dark mode styling */
 body.dark-mode {
     background-color: #333;
     color: #fff;
@@ -197,24 +330,4 @@ body.dark-mode {
 
 .dark-mode .no-images {
     color: #eb1010;
-}
-.dark-mode.card-img-top{
-    color: #ffffff;
-}
-.image-gallery {
-    background-color: #f7f4f4;
-    color: #000000;
-}
-
-.dark-mode.image-gallery {
-    background-color: #0c0a0a;
-    color: #fffdfd;
-}
-
-.dark-mode .card-body {
-    background-color: #2b2d38;
-}
-
-.card-body {
-    background-color: #d6c2c2;
 }

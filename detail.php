@@ -170,7 +170,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile-store</title>
+    <title>Details Mobile-store</title>
   <link rel="icon" href="image/mobilelogo77.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
@@ -179,13 +179,14 @@ $conn->close();
 </head>
 
 <body>
-    <div class="dark-mode-toggle" style="display:none;">
+
+    <!-- <div class="dark-mode-toggle" style="display:none;">
         <input type="checkbox" name="darkMode" id="darkModeToggle" onclick="toggleDarkMode()">
         <label for="darkModeToggle">Dark Mode</label>
-    </div>
+    </div> -->
     <div class="container">
-        <button class="btn-back" onclick="window.location.href = 'group.php'" >
-  <i class="fas fa-chevron-left"></i></button>
+        <!-- <button class="btn-back" onclick="window.location.href = 'group.php?userid=<?php //echo $userId; ?>'" > -->
+  <!-- <i class="fas fa-chevron-left"></i></button> -->
   <div class="contact-form"><div class="headname">
                 <img src="image/mobilelogo77.png" alt="project Logo"> <h1><em>Mobile-store </em></h1>
             </div><hr>
@@ -270,6 +271,52 @@ $conn->close();
                 </div>
             </div>
         </div>
+    </div>
+    <nav >
+      <div class="container">
+        <ul>
+          <li><a class="active" href="">Details</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="about.php">About</a></li>
+          <li style="float:left"><button class="logout-button"
+              onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
+          <li class="dropdown" style="float:right">
+            <button class="settings-button" class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="settings-page" style="display: none;">
+    <h2></h2>
+
+<ol>
+  <li>
+    <label>
+      <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
+    </label>
+   
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" name="notifications"> Notifications
+    </label>
+    
+  </li>
+  <li>
+    <label>
+      <input type="checkbox" name="privacy"> Privacy
+    </label>
+   
+  </li>
+  <li>
+    <label>
+      <span class="return-button" onclick="closeSettings()">&times;</span>
+    </label>
+  </li>
+</ol>
+
+
     </div>
     <!--completed the project-->
 </body>
