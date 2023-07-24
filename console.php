@@ -6,4 +6,12 @@ $password = getenv("MYSQL_PASSWORD") ?: "root";
 $database = getenv("MYSQL_DATABASE") ?: "mobile_store"; 
 
     
-    ?>
+// try {
+//     $pdo = new PDO('mysql:host=' . $servername . ';dbname=' . $database . ';charset=utf8mb4', $username, $password);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+// } catch (PDOException $e) {
+//     // Handle the exception, such as displaying an error message
+//     die("Connection failed: " . $e->getMessage());
+// }
+ ?>

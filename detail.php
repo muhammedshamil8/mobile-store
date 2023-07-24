@@ -1,8 +1,8 @@
 <?php
-ini_set('upload_max_filesize', '30M'); // Set maximum upload file size to 15MB
-ini_set('post_max_size', '30M'); // Set maximum POST data size to 15MB
+ini_set('upload_max_filesize', '30M'); // Set maximum upload file size to 30MB
+ini_set('post_max_size', '30M'); // Set maximum POST data size to 30MB
 
- include 'console.php'; 
+include 'console.php';
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
             // Check file size
-            $maxFileSize = 30 * 1024 * 1024; // 15MB
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
 
             if ($image['size'] > $maxFileSize) {
                 $errorMsg = "File size exceeds the maximum limit (30MB).";
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute();
                     $stmt->close();
                     // Redirect to the same page to prevent duplicate form submission
-                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    header("Location: " . $_SERVER['REQUEST_URI']);
                     exit;
                 } else {
                     // Handle file upload error
@@ -76,17 +76,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($errorMsg)) {
             $_SESSION['uploadErrorMessage'] = $errorMsg;
             // Redirect to the same page to display the error message
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
             exit;
         }
-    } elseif (isset($_POST['editImage'])) {
+    } elseif (isset($_POST['editform'])) {
         // Edit image
         $image = $_FILES['image'];
+        // Edit heading
+        $heading = $_POST['heading'];
+        // Edit description
+        $description = $_POST['description'];
 
         // Check if the image is not empty and there are no errors
         if (!empty($image['name']) && $image['error'] === 0) {
             // Check file size
-            $maxFileSize = 30 * 1024 * 1024; // 15MB
+            $maxFileSize = 30 * 1024 * 1024; // 30MB
 
             if ($image['size'] > $maxFileSize) {
                 $errorMsg = "File size exceeds the maximum limit (30MB).";
@@ -105,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute();
                     $stmt->close();
                     // Redirect to the same page to prevent duplicate form submission
-                    header("Location: ".$_SERVER['REQUEST_URI']);
+                    header("Location: " . $_SERVER['REQUEST_URI']);
                     exit;
                 } else {
                     // Handle file upload error
@@ -117,17 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsg = "Please select an image to upload.";
         }
 
-        // Check if there is an error message
-        if (isset($errorMsg)) {
-            $_SESSION['uploadErrorMessage'] = $errorMsg;
-            // Redirect to the same page to display the error message
-            header("Location: ".$_SERVER['REQUEST_URI']);
-            exit;
-        }
-    } elseif (isset($_POST['editHeading'])) {
-        // Edit heading
-        $heading = $_POST['heading'];
-
         // Check if the heading is not empty
         if (!empty($heading)) {
             // Update the heading in the upload table
@@ -136,13 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("si", $heading, $product_id);
             $stmt->execute();
             $stmt->close();
+
             // Redirect to the same page to prevent duplicate form submission
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
             exit;
         }
-    } elseif (isset($_POST['editDescription'])) {
-        // Edit description
-        $description = $_POST['description'];
 
         // Check if the description is not empty
         if (!empty($description)) {
@@ -152,8 +143,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("si", $description, $product_id);
             $stmt->execute();
             $stmt->close();
+
             // Redirect to the same page to prevent duplicate form submission
-            header("Location: ".$_SERVER['REQUEST_URI']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
             exit;
         }
     } elseif (isset($_POST['removeUpload'])) {
@@ -164,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $stmt->close();
         // Redirect to the same page to prevent duplicate form submission
-        header("Location: ".$_SERVER['REQUEST_URI']);
+        header("Location: " . $_SERVER['REQUEST_URI']);
         exit;
     }
 }
@@ -178,7 +170,9 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moving Bird</title>
+    <title>Mobile-store</title>
+  <link rel="icon" href="image/mobilelogo77.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="page3.css">
     <script src="page3.js"></script>
@@ -190,9 +184,11 @@ $conn->close();
         <label for="darkModeToggle">Dark Mode</label>
     </div>
     <div class="container">
-        <div class="contact-form">
-            <a href="group.php" class="btn btn-primary">Back</a>
-            <h2 class="text-center mb-4">Welcome to Moving Bird</h2>
+        <button class="btn-back" onclick="window.location.href = 'group.php'" >
+  <i class="fas fa-chevron-left"></i></button>
+  <div class="contact-form"><div class="headname">
+                <img src="image/mobilelogo77.png" alt="project Logo"> <h1><em>Mobile-store </em></h1>
+            </div><hr>
             <div class="row">
                 <div class="col-md-6">
                     <h3>Product: <?php echo $_GET['product_name']; ?></h3>
@@ -205,7 +201,7 @@ $conn->close();
                         <?php endif; ?>
                         <?php if ($uploadDetails): ?>
                             <div class="card mb-3">
-                                <img src="uploads/<?php echo $uploadDetails['image']; ?>" class="card-img-top">
+                                <img src="uploads/<?php echo $uploadDetails['image']; ?>" class="card-img-top" alt="product_image" >
                                 <div class="card-body">
                                     <h4 class="card-title"><?php echo $uploadDetails['heading']; ?></h4>
                                     <p class="card-text"><?php echo $uploadDetails['description']; ?></p>
@@ -250,21 +246,22 @@ $conn->close();
                                 <div class="form-group">
                                     <label for="image">Change the image:</label>
                                     <input type="file" name="image" accept="image/*"  class="form-control" id="image">
-                                    <button type="submit" name="editImage" class="btn btn-primary mt-2">Save</button>
+                                    <!-- <button type="submit" name="editImage" class="btn btn-primary mt-2">Save</button>
                                 </div>
                             </form>
                             <form class="my-s" method="post">
-                                <div class="form-group">
+                                <div class="form-group"> -->
                                     <label for="heading">Change the heading:</label>
                                     <input type="text" name="heading" class="form-control" id="heading" value="<?php echo $uploadDetails['heading']; ?>">
-                                    <button type="submit" name="editHeading" class="btn btn-primary mt-2">Save</button>
+                                    <!-- <button type="submit" name="editHeading" class="btn btn-primary mt-2">Save</button>
                                 </div>
                             </form>
                             <form class="my-s" method="post">
-                                <div class="form-group">
+                                <div class="form-group"> -->
                                     <label for="description">Change the description:</label>
                                     <textarea name="description" class="form-control" id="description"><?php echo $uploadDetails['description']; ?></textarea>
-                                    <button type="submit" name="editDescription" class="btn btn-primary mt-2">Save</button>
+                                    <!-- <button type="submit" name="editDescription" class="btn btn-primary mt-2">Save</button> -->
+                                    <button type="submit" name="editform" class="btn btn-primary mt-2">Save</button>
                                 </div>
                             </form>
                             <button onclick="cancelEditForm()" class="btn btn-primary">Cancel</button>

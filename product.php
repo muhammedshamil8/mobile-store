@@ -197,9 +197,9 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Moving Bird</title>
+<title>Mobile-store</title>
+  <link rel="icon" href="image/mobilelogo77.png" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Font Awesome CSS -->
@@ -207,48 +207,41 @@ $conn->close();
     <link rel="stylesheet" href="page2.css">
     <script src="page2.js"></script>
 </head>
-
-<body>
+<body id="body">
 
     <label class="switch">
         <input type="checkbox" name="darkMode" checked>
         <span class="slider"></span>
     </label>
 
-
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="card">
-                    <a href="group.php" class="btn btn-secondary">Groups</a>
-                    <br>
-                    <h2>Welcome to Moving Bird 'Products '</h2>
-                    <hr>
-                    <div class="search-container">
-                        <input type="text" id="myInput" class="form-control search-input" placeholder="Search"
-                            onkeyup="searchFun()">
+        <div class="headname">
+                <img src="image/mobilelogo77.png" alt="project Logo"> <h1><em>Mobile-store </em></h1> </div>
+           
+                    <a href="group.php" class="btn btn-secondary">Groups</a><br>
+                    
+                    <div class="search-container mb-4">
+                        <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
                         <span class="close-button" onclick="clearSearch()">&times;</span>
-                        <button onclick="searchFun()" class="btn btn-primary search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <button onclick="searchFun()" class="btn btn-primary search-button"><i class="fas fa-search"></i></button>
                     </div>
-
                     <div class="add-group-form">
                         <form method="POST" action="">
-                            <input type="text" name="product_name" placeholder="Product Name" required
-                                class="form-control"><br>
-                            <input type="text" name="groupname" placeholder="Group Name" required
-                                class="form-control"><br>
-                            <input type="submit" class="btn btn-primary" value="Create">&nbsp;
-                            <button onclick="backspace()" class="btn btn-secondary">Back</button>
+                            <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
+                            <input type="text" name="groupname" placeholder="Group Name" required class="form-control mb-2">
+                            <div class="d-flex justify-content-between">
+                                <input type="submit" class="btn btn-primary" value="Create">
+                                <button onclick="backspace()" class="btn btn-secondary">Back</button>
+                            </div>
                         </form>
                     </div>
 
-                    <button onclick="showAddproductForm()" class="btn btn-primary add-group">+ Add products</button>
-                    <br>
-                    <h3>Group:
-                        <?php echo $groupname; ?>
-                    </h3>
+                    <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button>
+                    <h3 class="mb-3">Group: <?php echo $groupname; ?></h3>
+                    <div class="table-container">
                     <table class="styled-table" id="mytable">
                         <thead class="thead-dark">
                             <tr>
@@ -260,63 +253,50 @@ $conn->close();
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $product_name = isset($_GET['product_name']) ? $_GET['product_name'] : null;
-                            if (isset($products)) {
-                                if (!empty($products)) {
-                                    $counter = 1;
-                                    foreach ($products as $row) {
-                                        echo "<tr class=\"active-row\">
-              <td>" . $counter . "</td>
-              <td>" . $row["product_name"] . "</td>
-              <td>" . $row["groupname"] . "</td>
-              <td><a href='detail.php?product_id=" . urlencode($row["id"]) . "&product_name=" . urlencode($row["product_name"]) . "' class='custom-link'>
-              <button class='btn btn-primary search-button'>Open</button></a></td>
-              <td>
-              <a href='product.php?groupid=" . urlencode($groupid) . "&pn=" . urlencode($row["product_name"]) . "' onclick='return confirmRemove();'>
-                <button class='btn btn-red search-button'>Remove</button>
-              </a>
-            </td>
-            
-              </tr>";
-
-                                        $counter++;
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='5'>No products found for this group</td></tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No products found</td></tr>";
-                            }
-                            ?>
-
+                            <?php if (isset($products) && !empty($products)): ?>
+                                <?php $counter = 1; ?>
+                                <?php foreach ($products as $row): ?>
+                                    <tr class="active-row">
+                                        <td><?php echo $counter; ?></td>
+                                        <td><?php echo $row["product_name"]; ?></td>
+                                        <td><?php echo $row["groupname"]; ?></td>
+                                        <td>
+                                            <a href='detail.php?product_id=<?php echo urlencode($row["id"]); ?>&product_name=<?php echo urlencode($row["product_name"]); ?>' class='custom-link'>
+                                                <button class='btn-blue'>Open</button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href='product.php?groupid=<?php echo urlencode($groupid); ?>&pn=<?php echo urlencode($row["product_name"]); ?>' onclick='return confirmRemove();'>
+                                                <button class='btn-red'>Remove</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <?php $counter++; ?>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan='5'>No products found for this group</td></tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
+                            </div>
                     <?php if (!empty($message)): ?>
-                    <center>
-                        <p>
+                        <div class="alert alert-success text-center mb-3">
                             <?php echo $message; ?>
-                        </p>
-                    </center>
+                        </div>
                     <?php endif; ?>
-
                     <?php if (!empty($deleteMessage)): ?>
-                    <center>
-                        <p>
+                        <div class="alert alert-danger text-center mb-3">
                             <?php echo $deleteMessage; ?>
-                        </p>
-                    </center>
+                        </div>
                     <?php endif; ?>
-
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
+
     <!-- Bootstrap JS -->
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- completed the project -->
 </body>
-
 </html>
