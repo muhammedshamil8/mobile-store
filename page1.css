@@ -225,12 +225,12 @@ input:checked+.slider:before {
 .search-input {
   flex: 1;
   margin-right: 10px;
-  padding: 16px 115px;
+  padding: 16px 235px 16px 32px; 
   border: none;
   border-radius: 5px;
   font-size: 28px;
   width:100%;
-  max-width: 700px; /* Limit the width for larger screens */
+  max-width: 800px; /* Limit the width for larger screens */
 }
 
 body.dark-mode .search-input {
@@ -241,14 +241,20 @@ body.dark-mode .search-input {
 @media (max-width: 768px) {
   .search-input {
     font-size: 20px;
-    padding: 16px 105px;
+    padding: 16px 195px 16px 24px;
   }
 }
 
+@media (min-width: 1024px) {
+  .search-input {
+    font-size: 20px;
+    padding: 27px 310px 16px 34px;
+  }
+}
 /* Search button */
 .search-button {
   height: 70px;
-  padding: 20px 30px;
+  padding: 15px 25px;
   background-color: #2196F3;
   border: none;
   border-radius: 5px;
@@ -257,7 +263,7 @@ body.dark-mode .search-input {
   font-size: 34px;
   color: #fff;
   position: absolute;
-  right: 1px;
+  right: -1px;
   top:1px;
 }
 .search-button:hover {
@@ -275,7 +281,7 @@ body.dark-mode .search-input {
 .close-button {
   position: absolute;
   top: 35px;
-  right: 130px;
+  right: 115px;
   transform: translateY(-50%);
   padding: 5px;
   color: red;
@@ -384,6 +390,9 @@ font-weight: bold;
 
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
+}
+.styled-table.dark-mode tbody tr:last-of-type {
+  border-bottom: 2px solid #040e31;
 }
 
 .styled-table tbody tr.active-row {
