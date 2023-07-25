@@ -1,7 +1,6 @@
 <?php
 session_start();
-
-include 'console.php';
+include 'db_conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
