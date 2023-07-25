@@ -133,6 +133,22 @@ li.dropdown {
   color: rgb(255, 255, 255);
 }
 
+/* CSS */
+.btn-danger {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-danger:hover {
+  background-color: darkred;
+}
+
 .card {
   position: absolute;
   top: 80px;

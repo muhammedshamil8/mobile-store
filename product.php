@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+
     $product_name = $_POST['product_name'];
     $groupname = $_POST['groupname'];
 
@@ -69,6 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $message = "All fields are required";
         $_SESSION['message'] = $message;
+
+        header("Location: product.php?groupid=" . urlencode($groupid));
+exit();
+
     }
 }
 

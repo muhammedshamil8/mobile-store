@@ -85,6 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     } else {
       echo "All fields are required";
+
+      header("Location: group.php?userid=" . urlencode($userId));
+exit();
+
     }
   }
 }
@@ -207,7 +211,9 @@ if (isset($_GET['search'])) {
 <table class="table" id="mytable" style="display:none;">
   <thead class="thead-dark">
     <tr>
-      <th colspan="4">Suggestions.!</th>
+      <th colspan="3">Suggestions.!</th>
+<th> <button class="btn-danger" onclick="clearSearch()">&times;</button></th>
+
 </tr>
     <tr>
       <th>No</th>
