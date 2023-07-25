@@ -24,21 +24,15 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Rest of your POST handling code...
 }
-
 $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
     $product_name = $_POST['product_name'];
     $groupname = $_POST['groupname'];
 
     if (!empty($product_name) && !empty($groupname)) {
-<<<<<<< HEAD
        
-=======
-        include 'console.php';
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $database);
@@ -270,7 +264,6 @@ $conn->close();
                         <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
                         <span class="close-button" onclick="clearSearch()">&times;</span>
                         <button onclick="searchFun()" class="search-button"><i class="fas fa-search"></i></button>
-<<<<<<< HEAD
                     </div>
                     <div class="add-group-form" <?php if (!empty($groupname)) { echo 'style="display: none;"'; } ?>>
     <form method="POST" action="">
@@ -294,27 +287,6 @@ $conn->close();
   
                               <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
 
-=======
-                    </div>
-                    <div class="add-group-form">
-                        <form method="POST" action="">
-                        <label>Product Name:
-                            <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
-</label><br>
-                            <label>Group Name:
-                            <input type="text" name="groupname" placeholder="<?php echo $groupname; ?>" required class="form-control mb-2">
- </label>
-                            <div class="d-flex justify-content-between">
-                                <input type="submit" class="btn btn-primaryy" value="Create"><br>
-                                <button onclick="backspace()" class="btn btn-secondaryy" >Back</button>
-                            </div>
-                        </form>
-                    </div>
-                    
-  
-                              <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
-
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
                     <!-- <h3 class="mb-3">★彡[ɢʀᴏᴜᴘ @ ]彡★</h3> -->
                     <div class="table-container">
                     <table class="styled-table" id="mytable">
