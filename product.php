@@ -236,11 +236,7 @@ $conn->close();
     <nav >
       <div class="container">
         <ul>
-<<<<<<< HEAD
         <li><a href="group.php?userid=<?php echo $userId; ?>&groupid=<?php echo urlencode($groupid); ?>">Groups</a></li>
-=======
-          <li><a href="group.php?userid=<?php echo $userId; ?>" class="btn btn-secondary">Groups</a></li>
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
           <li><a href="contact.php">Contact</a></li>
           <li><a href="about.php">About</a></li>
           <li style="float:left"><button class="logout-button"
