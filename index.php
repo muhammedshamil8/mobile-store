@@ -2,6 +2,9 @@
 session_start();
 include 'db_conn.php';
 
+// Include the console.php file first
+include 'db_conn.php';
+// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   $pdo = new PDO("mysql:host=$servername;dbname=$database;charset=utf8mb4", $username, $password);

@@ -34,7 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $groupname = $_POST['groupname'];
 
     if (!empty($product_name) && !empty($groupname)) {
+<<<<<<< HEAD
        
+=======
+        include 'console.php';
+>>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $database);
@@ -232,7 +236,11 @@ $conn->close();
     <nav >
       <div class="container">
         <ul>
+<<<<<<< HEAD
         <li><a href="group.php?userid=<?php echo $userId; ?>&groupid=<?php echo urlencode($groupid); ?>">Groups</a></li>
+=======
+          <li><a href="group.php?userid=<?php echo $userId; ?>" class="btn btn-secondary">Groups</a></li>
+>>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
           <li><a href="contact.php">Contact</a></li>
           <li><a href="about.php">About</a></li>
           <li style="float:left"><button class="logout-button"
@@ -266,6 +274,7 @@ $conn->close();
                         <input type="text" id="myInput" class="form-control search-input" placeholder="Search" onkeyup="searchFun()">
                         <span class="close-button" onclick="clearSearch()">&times;</span>
                         <button onclick="searchFun()" class="search-button"><i class="fas fa-search"></i></button>
+<<<<<<< HEAD
                     </div>
                     <div class="add-group-form" <?php if (!empty($groupname)) { echo 'style="display: none;"'; } ?>>
     <form method="POST" action="">
@@ -289,6 +298,27 @@ $conn->close();
   
                               <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
 
+=======
+                    </div>
+                    <div class="add-group-form">
+                        <form method="POST" action="">
+                        <label>Product Name:
+                            <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
+</label><br>
+                            <label>Group Name:
+                            <input type="text" name="groupname" placeholder="<?php echo $groupname; ?>" required class="form-control mb-2">
+ </label>
+                            <div class="d-flex justify-content-between">
+                                <input type="submit" class="btn btn-primaryy" value="Create"><br>
+                                <button onclick="backspace()" class="btn btn-secondaryy" >Back</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+  
+                              <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
+
+>>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
                     <!-- <h3 class="mb-3">★彡[ɢʀᴏᴜᴘ @ ]彡★</h3> -->
                     <div class="table-container">
                     <table class="styled-table" id="mytable">

@@ -265,54 +265,6 @@ $conn->close();
             </div>
         </div>
     </div>
-    <nav >
-      <div class="container">
-        <ul>
-         <!-- <li><a href="">Groups</a></li>href="group.php?userid=<?php //echo $userId; ?>&groupid=<?php // echo urlencode($groupid); ?>" -->
-          <li><a href="contact.php">Contact</a></li>
-          <li><a href="about.php">About</a></li>
-           <li><a class="active" href="">Details</a></li>
-           <!-- <li><a href="" >products</a></li> href="group.php?userid=<?php // echo $userId; ?>&groupid=<?php //echo urlencode($groupid); ?>" -->
-          <li style="float:left"><button class="logout-button"
-              onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
-          <li class="dropdown" style="float:right">
-            <button class="settings-button" class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <div class="settings-page" style="display: none;">
-    <h2></h2>
-
-<ol>
-  <li>
-    <label>
-      <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
-    </label>
-   
-  </li>
-  <li>
-    <label>
-      <input type="checkbox" name="notifications"> Notifications
-    </label>
-    
-  </li>
-  <li>
-    <label>
-      <input type="checkbox" name="privacy"> Privacy
-    </label>
-   
-  </li>
-  <li>
-    <label>
-      <span class="return-button" onclick="closeSettings()">&times;</span>
-    </label>
-  </li>
-</ol>
-
-
-    </div>
     <!--completed the project-->
 </body>
 </html>
