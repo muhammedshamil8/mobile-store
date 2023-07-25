@@ -69,9 +69,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </form>
             </div>
             <div class="card-footer">
-                <a href="product.php">
+              
                     <small>&copy; zamil</small>
-                </a>
+                
             </div>
         </div>
     </div>
