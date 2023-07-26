@@ -276,7 +276,7 @@ if (isset($_GET['search'])) {
 <tbody>
   <?php
   if (count($groups) > 0) {
-    echo "User belongs to the following groups:<br>"; // Move this line inside the if statement
+    // echo "User belongs to the following groups:<br>"; // Move this line inside the if statement
     // Display the table header
 
     // Loop through each group and display the table rows
@@ -291,7 +291,7 @@ if (isset($_GET['search'])) {
 
     echo "</tbody></table>";
   } else {
-    echo "User does not belong to any group.";
+    echo "<tr> <td colspan=\"4\"> User does not belong to any group.</td></tr>";
   }
   ?>
 </tbody>
@@ -435,6 +435,7 @@ updateMotivation();
 
 // Update the motivational message every 30 minutes (adjust as needed)
 setInterval(updateMotivation, 1 * 60 * 1000); // 30 minutes in milliseconds
+
 </script>
 
 </body>

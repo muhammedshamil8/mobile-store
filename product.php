@@ -7,12 +7,16 @@ include 'db_conn.php';
 $message = "";
 $deleteMessage = "";
 
-// Check if the userid is provided in the URL
-// error cuase
-// if (!isset($_GET['userid'])) {
-//     header("Location: group.php");
-//     exit();
-// }
+// Check if there's a success message in the session
+if (isset($_SESSION['message']) && !empty($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']); // Clear the message from the session after displaying
+}
+// Check if there's a delete message in the session
+if (isset($_SESSION['deleteMessage']) && !empty($_SESSION['deleteMessage'])) {
+    $deleteMessage = $_SESSION['deleteMessage'];
+    unset($_SESSION['deleteMessage']); // Clear the delete message from the session after displaying
+}
 
 $userId = isset($_GET['userid']) ? $_GET['userid'] : null;
 
@@ -380,5 +384,33 @@ $conn->close();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- completed the project -->
+    <!-- Your existing HTML code... -->
+
+<!-- Add the JavaScript script here -->
+<script>
+    // Function to automatically hide the alert message after a specified duration
+    function hideAlerts() {
+        var successAlert = document.querySelector('.alert-success');
+        var errorAlert = document.querySelector('.alert-danger');
+
+        if (successAlert) {
+            setTimeout(function() {
+                successAlert.style.display = 'none';
+            }, 5000); // Hide the success alert after 5 seconds (5000 milliseconds)
+        }
+
+        if (errorAlert) {
+            setTimeout(function() {
+                errorAlert.style.display = 'none';
+            }, 5000); // Hide the error alert after 5 seconds (5000 milliseconds)
+        }
+    }
+
+    // Call the function when the page is loaded
+    window.onload = function() {
+        hideAlerts();
+    };
+</script>
+
 </body>
 </html>

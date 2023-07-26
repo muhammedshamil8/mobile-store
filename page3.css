@@ -23,11 +23,7 @@ nav {
 
 .container {
     max-width: 100%;
-<<<<<<< HEAD
     padding: 5px;
-=======
-    padding: 10px;
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
     margin: 0;
 }
 
@@ -52,31 +48,30 @@ li a,
     padding: 14px 16px;
     text-decoration: none;
 }
+.li1 {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
 
 li a:hover:not(.active),
 .dropdown:hover .dropbtn {
     background-color: #111;
-<<<<<<< HEAD
     /* color: #45a049; */
     color: #fff;
-=======
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 }
 
 .active {
     background-color: #04AA6D;
-<<<<<<< HEAD
     padding: 14px 16px;
     color: #fff;
 }
 .active:hover{
     color: #000000;
 }
-=======
-    padding: 12px 16px;
-}
-
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 /* Styles for dropdown menu */
 li.dropdown {
     display: inline-block;
@@ -92,10 +87,7 @@ li.dropdown {
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-<<<<<<< HEAD
     color: #45a049;
-=======
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 }
 
 .dropdown-content a {
@@ -104,10 +96,7 @@ li.dropdown {
     text-decoration: none;
     display: block;
     text-align: left;
-<<<<<<< HEAD
     
-=======
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 }
 
 .dropdown-content a:hover {
@@ -151,13 +140,8 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
     z-index: 9999;
-<<<<<<< HEAD
     bottom: 8px;
     right: 80px;
-=======
-    bottom: 13px;
-    right: 100px;
->>>>>>> bd83cdde496d02a58255061a24e321a3ea8bd472
 }
 
 .logout-button:hover {

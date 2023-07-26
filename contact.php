@@ -57,7 +57,12 @@
       }
     }
   </script>
-  
+   <script>
+    // Function to go back to the previous page
+    function goBack() {
+      window.history.back();
+    }
+  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -122,16 +127,36 @@
     textarea {
       resize: vertical;
     }
+/* Container for buttons */
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; 
+}
 
-    input[type="submit"].btn {
-      grid-column: 1 / span 2;
-      background-color: #ff0000; /* Red button background color */
-      color: #fff; /* Button text color */
-      cursor: pointer;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+input[type="submit"].btn {
+  background-color: #ff0000;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  padding: 10px 1px; /* Increase padding to make the button wider */
+  border-radius: 5px;
+}
+input[type="submit"].btn:hover {
+      background-color: green;
     }
+.btn {
+  background-color: blue;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  padding: 10px 5px; /* Increase padding to make the button wider */
+  border-radius: 5px;
+}
+.btn:hover {
+      background-color: red;
+    }
+
      /* Dark mode styles for the red button */
      body.dark-mode input[type="submit"].btn {
       background-color: #8b0000; /* Dark mode button background color */
@@ -159,12 +184,12 @@
     <div class="dark-mode-toggle" style="display:none;">
         <input type="checkbox" name="darkMode" id="darkModeToggle" onclick="toggleDarkMode()">
         <label for="darkModeToggle">Dark Mode</label>
-    </div>
+    </div> 
   <div class="container">
     <p>
       If you have any questions, suggestions, or just want to say hello, feel free to get in touch with me using the form
       below. I would love to hear from you!
-    </p>
+    </p><div class="button-container">
     <form action="" method="post" autocomplete="off">
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" required />
@@ -177,11 +202,12 @@
 
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="6"  required ></textarea>
+      <button class="btn" onclick="goBack()">Go Back</button>
 
       <input type="submit" name="submit" value="Sent" onclick="sent()" class="btn" />
     </form>
   </div>
-
+  </div>
 
 </body>
 

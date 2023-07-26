@@ -4,17 +4,20 @@ ini_set('post_max_size', '30M'); // Set maximum POST data size to 30MB
 
 include 'db_conn.php';
 
+$userId = isset($_GET['userid']) ? $_GET['userid'] : null;
+$groupId = isset($productDetails['groupid']) ? $productDetails['groupid'] : null;
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 $product_id = $_GET['product_id'];
-
-// Retrieve details from the device and groups tables based on product_id
-$productQuery = "SELECT device.id, device.product_name, `groups`.groupname 
-                 FROM device, `groups` 
-                 WHERE device.id = ? AND device.groupid = `groups`.id";
+// Retrieve details from the device, groups, and upload tables based on product_id
+$productQuery = "SELECT device.id, device.product_name,device.groupid, `groups`.groupname, `groups`.userid
+                 FROM device
+                 INNER JOIN `groups` ON device.groupid = `groups`.id
+                 WHERE device.id = ?";
 
 $stmt = $conn->prepare($productQuery);
 $stmt->bind_param("i", $product_id);
@@ -163,6 +166,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -177,6 +183,12 @@ $conn->close();
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="page3.css">
     <script src="page3.js"></script>
+    <script>
+    // Function to go back to the previous page
+    function goBack() {
+      window.history.back();
+    }
+  </script>
 </head>
 
 <body>
@@ -267,9 +279,16 @@ $conn->close();
         </div>
     <nav >
       <div class="container">
-        <ul>
-          <li><a class="active" href="">Details</a></li>
+        <ul> 
+        <!-- Modify the anchor element for the "products" link -->
+        <li>
+  <a href="product.php?userid=<?php echo $productDetails['userid']; ?>&groupid=<?php echo urlencode($productDetails['groupid']); ?>">products</a>
+</li>
+
+
+
           <li><a href="contact.php">Contact</a></li>
+          <li><a class="active" href="">Details</a></li>
           <li><a href="about.php">About</a></li>
           <li style="float:left"><button class="logout-button"
               onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
