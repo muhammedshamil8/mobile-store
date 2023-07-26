@@ -9,10 +9,10 @@ $deleteMessage = "";
 
 // Check if the userid is provided in the URL
 // error cuase
-if (!isset($_GET['userid'])) {
-    header("Location: group.php");
-    exit();
-}
+// if (!isset($_GET['userid'])) {
+//     header("Location: group.php");
+//     exit();
+// }
 
 $userId = isset($_GET['userid']) ? $_GET['userid'] : null;
 
