@@ -1,5 +1,11 @@
 FROM trafex/php-nginx:latest
 
+USER root
+
+RUN apk add --no-cache php81-pdo_mysql
+
+USER nobody
+
 COPY . /var/www/html
 
 WORKDIR /var/www/html
