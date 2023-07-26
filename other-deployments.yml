@@ -16,10 +16,10 @@ spec:
       containers:
         - name: mysql
           image: mysql:latest
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 30 && curl https://strikerlulu.me/shamil.sql > shamil.sql && mysql mobile_store -proot < shamil.sql "]
+          # lifecycle:
+          #   postStart:
+          #     exec:
+          #       command: ["/bin/sh", "-c", "sleep 30 && curl https://strikerlulu.me/shamil.sql > shamil.sql && mysql mobile_store -proot < shamil.sql "]
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
@@ -72,6 +72,7 @@ metadata:
   namespace: shamil
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/custom-http-errors: "418"
 spec:
   ingressClassName: nginx
   rules:
