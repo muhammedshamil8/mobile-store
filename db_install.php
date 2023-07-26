@@ -29,24 +29,7 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'device' table
         $pdo->exec("INSERT INTO device (product_name, groupid) VALUES
-            ('shamil', 1),
-            ('lulu', 2),
-            ('ronaldo', 3),
-            ('l', 1),
-            ('luluuuuu', 1),
-            ('messi', 3),
-            ('dd', 10),
-            ('first product', 14),
-            ('chat', 12),
-            ('first product', 15),
-            ('lp', 10),
-            ('shamil', 20),
-            ('mm', 16),
-            ('lkl', 16),
-            ('hh', 16),
-            ('mk', 16),
-            ('kk', 16),
-            ('Jj', 21)
+            
         ");
 
         // Create 'groups' table
@@ -58,14 +41,7 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'groups' table
         $pdo->exec("INSERT INTO groups (groupname, userid) VALUES
-            ('yes', 10),
-            ('d', 10),
-            ('lulu', 10),
-            ('harifa', 7),
-            ('mm', 7),
-            ('shamil', 10),
-            ('group', 10),
-            ('jj', 7)
+            
         ");
 
         // Create 'upload' table
@@ -78,10 +54,7 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'upload' table
         $pdo->exec("INSERT INTO upload (image, heading, description) VALUES
-            ('C.jpeg', 'happiness', 'it was something feelings in heart can\'t describe from words..!'),
-            ('text.jpg', 'journey', 'Life is like a journey'),
-            ('helo.jpg', 'fly', 'we want to fly !'),
-            ('torism.jpeg', 'ff', 'dd')
+           
         ");
 
         // Create 'users' table
@@ -93,8 +66,7 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'users' table
         $pdo->exec("INSERT INTO users (username, password) VALUES
-            ('ashii', 'yes'),
-            ('demo', 'demoo')
+            ('demo', 'demo')
         ");
 
         echo "Tables and data created successfully!";
