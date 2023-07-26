@@ -1,12 +1,13 @@
 <?php
 
-// db_install.php page 
+// db.php page 
 // Function to establish the database connection
-function connectToDatabase() {
-    $servername = "mysql_db";     
-    $database = "root";        
-    $username = "root";    
-    $password = "mobile-store";    
+function connectToDatabase()
+{
+    $servername = "mysql_db";
+    $database = "mobile-store";
+    $username = "root";
+    $password = "root";
 
     try {
         $pdo = new PDO("mysql:host=$servername;dbname=$database;charset=utf8mb4", $username, $password);
@@ -18,7 +19,8 @@ function connectToDatabase() {
 }
 
 // Function to create tables and insert data
-function createTablesAndData($pdo) {
+function createTablesAndData($pdo)
+{
     try {
         // Create 'device' table
         $pdo->exec("CREATE TABLE IF NOT EXISTS device (
@@ -29,19 +31,23 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'device' table
         $pdo->exec("INSERT INTO device (product_name, groupid) VALUES
-            
+            ('shamil', 1),
+            ('lulu', 2),
+            ('ronaldo', 3)
         ");
 
         // Create 'groups' table
-        $pdo->exec("CREATE TABLE IF NOT EXISTS groups (
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `groups` (
             id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
             groupname varchar(255) NOT NULL,
             userid int NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci");
 
         // Insert data into 'groups' table
-        $pdo->exec("INSERT INTO groups (groupname, userid) VALUES
-            
+        $pdo->exec("INSERT INTO `groups` (groupname, userid) VALUES
+            ('yes', 10),
+            ('d', 10),
+            ('lulu', 10)
         ");
 
         // Create 'upload' table
@@ -54,8 +60,10 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'upload' table
         $pdo->exec("INSERT INTO upload (image, heading, description) VALUES
-           
-        ");
+        ('C.jpeg', 'happiness', 'it was something feelings in heart can\'t describe from words..!'),
+        ('text.jpg', 'journey', 'Life is like a journey')
+    ");
+    
 
         // Create 'users' table
         $pdo->exec("CREATE TABLE IF NOT EXISTS users (
@@ -66,8 +74,10 @@ function createTablesAndData($pdo) {
 
         // Insert data into 'users' table
         $pdo->exec("INSERT INTO users (username, password) VALUES
-            ('demo', 'demo')
-        ");
+        ('demo', 'demoo'),
+        ('ashii', 'open123')
+    ");
+    
 
         echo "Tables and data created successfully!";
     } catch (PDOException $e) {
@@ -79,8 +89,4 @@ function createTablesAndData($pdo) {
 $pdo = connectToDatabase();
 createTablesAndData($pdo);
 
-
-// Redirect to the login page (index.php)
-header("Location: index.php");
-exit;
 ?>
