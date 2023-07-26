@@ -1,6 +1,6 @@
 <?php
 
-$servername = getenv("MYSQL_HOST") ?: "mysql_db";
+$servername = getenv("MYSQL_HOST") ?: "mysql";
 $username = getenv("MYSQL_USER") ?: "root";
 $password = getenv("MYSQL_PASSWORD") ?: "root";
 $database = getenv("MYSQL_DATABASE") ?: "mobile-store"; 
