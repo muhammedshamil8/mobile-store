@@ -2,21 +2,7 @@
 
 // db.php page 
 // Function to establish the database connection
-function connectToDatabase()
-{
-    $servername = "mysql_db";
-    $database = "mobile-store";
-    $username = "root";
-    $password = "root";
-
-    try {
-        $pdo = new PDO("mysql:host=$servername;dbname=$database;charset=utf8mb4", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $pdo;
-    } catch (PDOException $e) {
-        die("Connection failed: " . $e->getMessage());
-    }
-}
+require_once "./db_conn.php";
 
 // Function to create tables and insert data
 function createTablesAndData($pdo)
@@ -86,7 +72,6 @@ function createTablesAndData($pdo)
 }
 
 // Call the function to connect and create tables with data
-$pdo = connectToDatabase();
 createTablesAndData($pdo);
 
 // header("Location: index.php");
