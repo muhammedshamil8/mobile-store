@@ -13,6 +13,9 @@
 - step 9: Finally Completed The project ;
 - step 10: modified by lots of ideas
 
+- project completed 98%
+- the final issue to solve ..unhide search table before searching and stop reloading when search ...and all reloading stuffs gon mad for avoiding reloading the page when click anything i need to study more ajax and all i will solve it one day insha Allah 
+
 ## Test demo locally
 ```sh
 git clone git@github.com:muhammedshamil8/mobile-store.git

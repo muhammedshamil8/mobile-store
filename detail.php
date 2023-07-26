@@ -2,7 +2,7 @@
 ini_set('upload_max_filesize', '30M'); // Set maximum upload file size to 30MB
 ini_set('post_max_size', '30M'); // Set maximum POST data size to 30MB
 
-include 'console.php';
+include 'db_conn.php';
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
@@ -80,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } elseif (isset($_POST['editform'])) {
+        
         // Edit image
         $image = $_FILES['image'];
         // Edit heading
@@ -132,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Redirect to the same page to prevent duplicate form submission
             header("Location: " . $_SERVER['REQUEST_URI']);
-            exit;
+            
         }
 
         // Check if the description is not empty
@@ -247,21 +248,13 @@ $conn->close();
                                 <div class="form-group">
                                     <label for="image">Change the image:</label>
                                     <input type="file" name="image" accept="image/*"  class="form-control" id="image">
-                                    <!-- <button type="submit" name="editImage" class="btn btn-primary mt-2">Save</button>
-                                </div>
-                            </form>
-                            <form class="my-s" method="post">
-                                <div class="form-group"> -->
+                                   
                                     <label for="heading">Change the heading:</label>
                                     <input type="text" name="heading" class="form-control" id="heading" value="<?php echo $uploadDetails['heading']; ?>">
-                                    <!-- <button type="submit" name="editHeading" class="btn btn-primary mt-2">Save</button>
-                                </div>
-                            </form>
-                            <form class="my-s" method="post">
-                                <div class="form-group"> -->
+                                   
                                     <label for="description">Change the description:</label>
                                     <textarea name="description" class="form-control" id="description"><?php echo $uploadDetails['description']; ?></textarea>
-                                    <!-- <button type="submit" name="editDescription" class="btn btn-primary mt-2">Save</button> -->
+
                                     <button type="submit" name="editform" class="btn btn-primary mt-2">Save</button>
                                 </div>
                             </form>
@@ -271,7 +264,7 @@ $conn->close();
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     <nav >
       <div class="container">
         <ul>
@@ -295,19 +288,19 @@ $conn->close();
     <label>
       <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
     </label>
-   
+
   </li>
   <li>
     <label>
       <input type="checkbox" name="notifications"> Notifications
     </label>
-    
+
   </li>
   <li>
     <label>
       <input type="checkbox" name="privacy"> Privacy
     </label>
-   
+
   </li>
   <li>
     <label>
@@ -315,9 +308,8 @@ $conn->close();
     </label>
   </li>
 </ol>
-
-
     </div>
+
     <!--completed the project-->
 </body>
 </html>

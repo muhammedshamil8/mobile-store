@@ -55,47 +55,47 @@ if (darkMode === 'true') {
 var darkModeCheckbox = document.querySelector('input[name="darkMode"]');
 darkModeCheckbox.checked = darkMode === 'true';
 });
+  // function searchFun() {
+  //   let filter = document.getElementById('myInput').value.toUpperCase();
+  //   let mytable = document.getElementById('mytable');
+  //   let tr = mytable.getElementsByTagName('tr');
 
-  function searchFun() {
-    let filter = document.getElementById('myInput').value.toUpperCase();
-    let mytable = document.getElementById('mytable');
-    let tr = mytable.getElementsByTagName('tr');
+  //   for (var i = 0; i < tr.length; i++) {
+  //     let td = tr[i].getElementsByTagName('td')[1];
 
-    for (var i = 0; i < tr.length; i++) {
-      let td = tr[i].getElementsByTagName('td')[1];
+  //     if (td) {
+  //       let textvalue = td.textContent || td.innerText;
 
-      if (td) {
-        let textvalue = td.textContent || td.innerText;
+  //       if (textvalue.toUpperCase().indexOf(filter) > -1) {
+  //         tr[i].style.display = "";
+  //       } else {
+  //         tr[i].style.display = "none";
+  //       }
+  //     }
+  //   }
 
-        if (textvalue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
+  //   // Display product table if filter is not empty
+  //   if (filter.length > 0) {
+  //     mytable.style.display = "table";
+  //   } else {
+  //     mytable.style.display = "none";
+  //   }
+  // }
 
-    // Display product table if filter is not empty
-    if (filter.length > 0) {
-      mytable.style.display = "table";
-    } else {
-      mytable.style.display = "none";
-    }
-  }
+// function clearSearch() {
+//   var input = document.getElementById('myInput');
+//   var tr = document.getElementsByTagName('tr');
+//   input.value = ''; // Clear the input value
 
-  function clearSearch() {
-    var input = document.getElementById('myInput');
-    var tr = document.getElementsByTagName('tr');
-    input.value = ''; // Clear the input value
+//   // Display all table rows
+//   for (var i = 0; i < tr.length; i++) {
+//     tr[i].style.display = "";
+//   }
 
-    // Display all table rows
-    for (var i = 0; i < tr.length; i++) {
-      tr[i].style.display = "";
-    }
+//   // Hide the product table
+//   document.getElementById('mytable').style.display = "none";
+// }
 
-    // Hide the product table
-    document.getElementById('mytable').style.display = "none";
-  }
 
   function showAddGroupForm() {
     var addGroupForm = document.querySelector('.add-group-form');
@@ -110,7 +110,8 @@ darkModeCheckbox.checked = darkMode === 'true';
   function confirmRemove() {
     return confirm("Are you sure you want to remove this group?");
   }
+
   function open() {
 
   }
-  // completed the project
+  

@@ -1,17 +1,38 @@
 <?php
 session_start();
-
 error_reporting(0);
+include 'db_conn.php';
+
 
 $message = "";
 $deleteMessage = "";
 
+// Check if the userid is provided in the URL
+// error cuase
+if (!isset($_GET['userid'])) {
+    header("Location: group.php");
+    exit();
+}
+
+$userId = isset($_GET['userid']) ? $_GET['userid'] : null;
+
+// Fetch the actual userid from the users table
+$stmt = $pdo->prepare("SELECT id FROM `users` WHERE username = ?");
+$stmt->execute([$_SESSION['username']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Rest of your POST handling code...
+}
+$product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $product_name = $_POST['product_name'];
     $groupname = $_POST['groupname'];
 
     if (!empty($product_name) && !empty($groupname)) {
-        include 'console.php';
+       
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $database);
@@ -48,6 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $message = "All fields are required";
         $_SESSION['message'] = $message;
+
+        header("Location: product.php?groupid=" . urlencode($groupid));
+exit();
+
     }
 }
 
@@ -56,7 +81,7 @@ $product_name = isset($_GET['pn']) ? $_GET['pn'] : null;
 if (!empty($product_name)) {
     $groupid = $_GET['groupid'];
 
-     include 'console.php'; 
+    //  include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -91,7 +116,7 @@ if (!empty($product_name)) {
 $groupid = $_GET['groupid'];
 
 if (!empty($groupid)) {
-     include 'console.php'; 
+    //  include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -132,7 +157,7 @@ if (!empty($groupid)) {
     $conn->close();
 
     // Retrieve all groups
-     include 'console.php'; 
+    //  include 'console.php'; 
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $database);
@@ -158,7 +183,7 @@ ORDER BY device.id";
 
     $conn->close();
 
-     include 'console.php'; 
+    //  include 'console.php'; 
 
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
@@ -209,7 +234,7 @@ $conn->close();
     <nav >
       <div class="container">
         <ul>
-          <li><a href="group.php?userid=<?php echo $userId; ?>" class="btn btn-secondary">Groups</a></li>
+        <li><a href="group.php?userid=<?php echo $userId; ?>&groupid=<?php echo urlencode($groupid); ?>">Groups</a></li>
           <li><a href="contact.php">Contact</a></li>
           <li><a href="about.php">About</a></li>
           <li style="float:left"><button class="logout-button"
@@ -244,20 +269,24 @@ $conn->close();
                         <span class="close-button" onclick="clearSearch()">&times;</span>
                         <button onclick="searchFun()" class="search-button"><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="add-group-form">
-                        <form method="POST" action="">
-                        <label>Product Name:
-                            <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
-</label><br>
-                            <label>Group Name:
-                            <input type="text" name="groupname" placeholder="<?php echo $groupname; ?>" required class="form-control mb-2">
- </label>
-                            <div class="d-flex justify-content-between">
-                                <input type="submit" class="btn btn-primaryy" value="Create"><br>
-                                <button onclick="backspace()" class="btn btn-secondaryy" >Back</button>
-                            </div>
-                        </form>
-                    </div>
+                    <div class="add-group-form" <?php if (!empty($groupname)) { echo 'style="display: none;"'; } ?>>
+    <form method="POST" action="">
+        <label>Product Name:
+            <input type="text" name="product_name" placeholder="Product Name" required class="form-control mb-2">
+        </label><br>
+        <label>
+        <input  type="text" name="fun" value="Have a Nice day &#x1F60A; " disabled class="form-control mb-2">
+</label>
+            <!-- Hidden input field to pass the group name -->
+            <input type="hidden" name="groupname" value="<?php echo $groupname; ?>">
+        
+        <div class="d-flex justify-content-between">
+            <input type="submit" class="btn btn-primaryy" value="Create"><br>
+            <button onclick="backspace()" class="btn btn-secondaryy">Back</button>
+        </div>
+    </form>
+</div>
+
                     
   
                               <button onclick="showAddproductForm()" class="btn btn-primary add-group mb-3">+ Add Products</button></div>
