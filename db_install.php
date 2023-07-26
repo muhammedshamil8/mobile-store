@@ -89,4 +89,7 @@ function createTablesAndData($pdo)
 $pdo = connectToDatabase();
 createTablesAndData($pdo);
 
+header("Location: index.php");
+exit;
+
 ?>
