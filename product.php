@@ -3,7 +3,13 @@ session_start();
 error_reporting(0);
 include 'db_conn.php';
 
-
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    // Redirect to the login page or display an error message
+    header("Location: index.php?error=Please log in first");
+    exit();
+  }
+  
 $message = "";
 $deleteMessage = "";
 

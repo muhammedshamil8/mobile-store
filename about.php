@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+  // Debugging statement
+  echo "User is not logged in.";
+
+  // Redirect to the login page or display an error message
+  header("Location: index.php?error=Please log in first");
+  exit();
+} else {
+  // Debugging statement
+  // echo "User is logged in as: " . $_SESSION['username'];
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,10 +33,7 @@
       line-height: 1.6;
       margin: 0;
       padding: 0;
-    }
-
-    body.light-mode {
-      background-color: #f8f9fa;
+      background-color:  #949398ff;
       color: #333;
     }
 
@@ -27,9 +41,17 @@
       background-color: #212529;
       color: #f8f9fa;
     }
-
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      border: 5px solid red;
+      background-color:  #f2f2f2 ; /* Light mode container background color */
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light mode box shadow */
+    }
     .card {
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+     
     }
 
     .card.light-mode {
@@ -42,7 +64,7 @@
     }
 
     header {
-      background-color: #28a745;
+      background-image: linear-gradient(to right,rgb(62, 183, 204), rgb(25, 25, 194), rgb(62, 183, 204));
       color: #fff;
       align-items: center;
       padding: 1rem;
@@ -169,9 +191,10 @@
 
   <main>
     <div class="container">
+    <div class="container d-flex justify-content-center align-items-center vh-90 ">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <div class="card">
+          
             <h3 class="mb-3">About Mobile-store</h3>
             <p>Welcome to Mobile-store, your one-stop destination for all your data storing needs. We are committed to providing a secure and efficient platform for storing and managing your data.</p>
             <p>At Mobile-store, we offer a reliable and user-friendly system for storing a wide range of data, including documents, images, videos, and more. Our platform is designed to ensure that your data remains safe and accessible whenever you need it.</p>
@@ -182,11 +205,17 @@
               <div class="button-container">
               <button class="btn">Learn More</button>
               <button class="btn2" onclick="goBack()">Go Back</button>
-            </div></div>
+            
           </div>
         </div>
       </div>
     </div>
+    </div>
+    </div>
+    
+    
+    
+    
   </main>
 
   <!-- Bootstrap JS -->

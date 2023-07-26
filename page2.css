@@ -630,11 +630,11 @@ body.dark-mode .search-input {
 
 .btn-red,
 .btn-blue {
-  padding: 12px 22px;
-  font-size: 20px;
+  padding: 11px 15px;
+  font-size: 15px;
   border-radius: 6px;
   text-align: center;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -737,7 +737,7 @@ a{
 .btn-blue {
   background-color: rgb(4, 125, 206);
   color: white;
-  /
+  
 }
 .btn-blue:hover {
   background-color: darkblue;

@@ -1,4 +1,20 @@
 <?php
+session_start();
+
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+  // Debugging statement
+  echo "User is not logged in.";
+
+  // Redirect to the login page or display an error message
+  header("Location: index.php?error=Please log in first");
+  exit();
+} else {
+  // Debugging statement
+  // echo "User is logged in as: " . $_SESSION['username'];
+}
+
 // if (isset($_POST["submit"])){
 
 //   $username = $_POST["name"];
@@ -28,7 +44,12 @@
 //     echo "<script>alert('Mail Not Send :-)');</script>";
 //   }
 //   }
-  ?>
+
+
+
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,12 +90,12 @@
       line-height: 1.6;
       margin: 0;
       padding: 0;
-      background-color: #f2f2f2; /* Light mode background color */
+      background-color: #949398ff; /* Light mode background color */
       color: #333; /* Light mode text color */
     }
 
     header {
-      background-color: #28a745; /* Green header background color */
+      background-image: linear-gradient(to right,rgb(62, 183, 204), rgb(25, 25, 194), rgb(62, 183, 204));
       color: #fff; /* Header text color */
       text-align: center;
       padding: 1rem;
@@ -84,7 +105,7 @@
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
-      background-color: #fff; /* Light mode container background color */
+      background-color: #f5f5f5 ; /* Light mode container background color */
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light mode box shadow */
     }
 
@@ -135,7 +156,7 @@
 }
 
 input[type="submit"].btn {
-  background-color: #ff0000;
+  background-color: red;
   color: #fff;
   cursor: pointer;
   border: none;
@@ -145,7 +166,7 @@ input[type="submit"].btn {
 input[type="submit"].btn:hover {
       background-color: green;
     }
-.btn {
+.btn1 {
   background-color: blue;
   color: #fff;
   cursor: pointer;
@@ -153,13 +174,13 @@ input[type="submit"].btn:hover {
   padding: 10px 5px; /* Increase padding to make the button wider */
   border-radius: 5px;
 }
-.btn:hover {
+.btn1:hover {
       background-color: red;
     }
 
      /* Dark mode styles for the red button */
      body.dark-mode input[type="submit"].btn {
-      background-color: #8b0000; /* Dark mode button background color */
+      background-color: red; /* Dark mode button background color */
     }
     /* Dark mode styles for form inputs and button */
     body.dark-mode input,
@@ -168,8 +189,8 @@ input[type="submit"].btn:hover {
       color: #fff; /* Dark mode input text color */
     }
 
-    body.dark-mode input[type="submit"] {
-      background-color: #006400; /* Dark mode button background color */
+    body.dark-mode input[type="submit"].btn:hover {
+      background-color: green;
     }
   </style>
   <script src="page1.js"></script>
@@ -202,7 +223,7 @@ input[type="submit"].btn:hover {
 
       <label for="message">Message:</label>
       <textarea id="message" name="message" rows="6"  required ></textarea>
-      <button class="btn" onclick="goBack()">Go Back</button>
+      <button class="btn1" onclick="goBack()">Go Back</button>
 
       <input type="submit" name="submit" value="Sent" onclick="sent()" class="btn" />
     </form>

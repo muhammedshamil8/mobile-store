@@ -403,11 +403,12 @@ body.dark-mode .search-input {
 }
 /* search table style */
 .table {
-border-collapse: collapse;
-margin: 25px 0;
-font-size: 0.9em;
-font-family: sans-serif;
-min-width: 100%;
+  border-collapse: collapse;
+  margin: 25px auto; 
+  font-size: 18px;
+  font-family: sans-serif;
+  max-width: 800px; 
+  width: 90%;
 box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -427,13 +428,13 @@ color: #ffffff;
 }
 
 .table th {
-background-color: #0c1b64;
+background-color: #0c1d42;
 color: #ffffff;
 font-weight: bold;
 }
 
 .table.dark-mode th {
-background-color: #04090e;
+background-color: #061148;
 color: #ffffff;
 font-weight: bold;
 }
@@ -447,7 +448,7 @@ font-weight: bold;
   max-width: 800px; 
   width: 90%;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  table-layout: fixed;
+  
 }
 .styled-table thead tr {
   background-color: #009879;
@@ -520,16 +521,19 @@ a{
 
 .btn-red,
 .btn-blue {
-  padding: 15px 15px;
-  font-size: 20px;
-  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 18px;
+  border-radius: 10px;
   text-align: center;
   width: 100px; 
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
+/* .btn-blue{
+  padding: 11px 15px;
+} */
 @media (max-width: 768px) {
   .btn-red,
   .btn-blue {
@@ -574,6 +578,7 @@ a{
 .btn-red {
   background-color: red;
   color: white;
+  border: 1px solid #d30000;
  
 }
 
@@ -583,7 +588,7 @@ a{
 .btn-blue {
   background: linear-gradient(to right, #4f9de1, #2654b8);
   color: white;
-  border: 2px solid #007bff;
+  border: 1px solid #007bff;
 }.btn-blue:hover {
   background: linear-gradient(to right, #2654b8, #4f9de1);
 }

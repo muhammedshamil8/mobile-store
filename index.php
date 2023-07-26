@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_install.php';
+include 'db_conn.php';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
