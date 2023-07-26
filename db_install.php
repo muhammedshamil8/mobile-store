@@ -1,12 +1,12 @@
 <?php
-/*
-// db.php page 
+
+// db_install.php page 
 // Function to establish the database connection
 function connectToDatabase() {
     $servername = "mysql_db";     
     $database = "root";        
     $username = "root";    
-    $password = "mobile_store";    
+    $password = "mobile-store";    
 
     try {
         $pdo = new PDO("mysql:host=$servername;dbname=$database;charset=utf8mb4", $username, $password);
@@ -106,5 +106,9 @@ function createTablesAndData($pdo) {
 // Call the function to connect and create tables with data
 $pdo = connectToDatabase();
 createTablesAndData($pdo);
-*/
+
+
+// Redirect to the login page (index.php)
+header("Location: index.php");
+exit;
 ?>
