@@ -41,28 +41,50 @@ if (!isset($_SESSION['username'])) {
       background-color: #212529;
       color: #f8f9fa;
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      border: 5px solid red;
-      background-color:  #f2f2f2 ; /* Light mode container background color */
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light mode box shadow */
-    }
-    .card {
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-     
-    }
+    
+  .container0 {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 5px solid red;
+    background-color: #f2f2f2; /* Light mode container background color */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light mode box shadow */
+    color: #000;
+  }
 
-    .card.light-mode {
-      background-color: #f2f2f2;
-    }
+  .container.dark-mode {
+    background-color: red; /* Update the background color for dark mode */
+    color: #fff; /* Update the text color for dark mode */
+  }
 
-    .card.dark-mode {
-      background-color: #343a40;
-      color:#fff;
-    }
+  .card {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 5px solid red;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light mode box shadow */
+    color: #000;
+  }
 
+  .card.light-mode {
+    background-color: #fff;
+  }
+
+  .card.dark-mode {
+    background-color: #343a40;
+    color: #fff; /* Update the text color for dark mode */
+  }
+
+  /* Add styles for the <p> element in dark mode */
+  p {
+    line-height: 1.8;
+    color: #fafdff;
+  }
+
+  p.dark-mode {
+    color: #fafdff; /* Update the text color for dark mode */
+  }
     header {
       background-image: linear-gradient(to right,rgb(62, 183, 204), rgb(25, 25, 194), rgb(62, 183, 204));
       color: #fff;
