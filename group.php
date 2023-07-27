@@ -943,7 +943,7 @@ button.return-button b {
     
             <div class="search-container">
       <form method="GET">
-        <input type="text" id="myInput" class="form-control search-input" placeholder="Search the products" name="search" />
+        <input type="text" id="myInput" class="form-control search-input" placeholder="Search the products" name="search" required/>
         <span class="close-button" onclick="clearSearch()">&times;</span>
         <button type="button" class="btn btn-primary search-button" onclick="searchFun()">
           <i class="fas fa-search"></i>
@@ -1088,8 +1088,8 @@ button.return-button b {
   <!-- completed the project -->
 
   <script>
-  
-  function searchFun() {
+  // Function to handle the search functionality
+function searchFun() {
   let filter = document.getElementById('myInput').value.trim().toUpperCase();
   let userId = <?php echo json_encode($userId); ?>;
   let currentSearch = new URLSearchParams(location.search).get('search');
@@ -1102,17 +1102,27 @@ button.return-button b {
     newSearch = `?userid=${userId}`;
   }
 
+  // Store the search query in localStorage only if the filter is not empty
+  if (filter.length > 0) {
+    localStorage.setItem('searchQuery', filter);
+  }
+
   // Reload the page with the updated search query
   location.href = 'group.php' + newSearch;
 }
 
-// // Unhide the table when there are search results
+// Function to show or hide the table based on the stored search query
 function showTableIfResults() {
+  let searchQuery = localStorage.getItem('searchQuery');
+  let myInput = document.getElementById('myInput');
   let mytable = document.getElementById('mytable');
-  if (mytable.rows.length > 0) {
-    mytable.style.display = "table";
+
+  // Check if there is a stored search query
+  if (searchQuery) {
+    myInput.value = searchQuery; // Set the input value from localStorage
+    mytable.style.display = "table"; // Show the table
   } else {
-    mytable.style.display = "none";
+    mytable.style.display = "none"; // Hide the table
   }
 }
 
@@ -1120,8 +1130,6 @@ function showTableIfResults() {
 window.onload = function() {
   showTableIfResults();
 };
-
-
 function clearSearch() {
   var input = document.getElementById('myInput');
   input.value = ''; // Clear the input value
@@ -1129,16 +1137,11 @@ function clearSearch() {
   // Hide the table
   let mytable = document.getElementById('mytable');
   mytable.style.display = "none";
+
+  // Clear the search query from localStorage
+  localStorage.removeItem('searchQuery');
 }
 
-function clearSearch() {
-  var input = document.getElementById('myInput');
-  input.value = ''; // Clear the input value
-
-  // Hide the table
-  let mytable = document.getElementById('mytable');
-  mytable.style.display = "none";
-}
 
   
 // Array of 10 motivational messages
