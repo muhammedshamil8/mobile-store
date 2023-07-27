@@ -208,105 +208,60 @@ body {
 
 /* Common styles for navigation bar */
 nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #38444d;
-    padding: 2px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 999;
-    font-size: 15px;
-    /* why */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #38444d;
+  padding: 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  font-size: 14px;
 }
 
 .container {
-    max-width: 100%;
-    padding: 5px;
-    margin: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
 }
 
 /* Reset default list styles and add common styles for navigation bar */
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #38444d;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #38444d;
 }
 
 li {
-    float: left;
+  float: left;
 }
 
-li a,
-.dropbtn {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-.li1 {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+li a, .dropbtn {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 10px 14px;
+  text-decoration: none;
 }
 
-
-li a:hover:not(.active),
-.dropdown:hover .dropbtn {
-    background-color: #111;
-    /* color: #45a049; */
-    color: #fff;
+li a:hover:not(.active), .dropdown:hover .dropbtn {
+  background-color: #111;
+  color: #fff;
 }
 
 .active {
-    background-color: #04AA6D;
-    padding: 14px 16px;
-    color: #fff;
+  background-color: #04AA6D;
+  padding: 10px 14px;
 }
 .active:hover{
-    color: #000000;
-}
-/* Styles for dropdown menu */
-li.dropdown {
-    display: inline-block;
-    position: relative;
+  color:#000;
+  
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    color: #45a049;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
 
 /* Buttons styling */
 button {
@@ -322,7 +277,7 @@ button {
     background-color: #38444d;
     color: #fff;
     border-radius: 0px;
-    padding: 5px 23px;
+    padding: 2px 15px;
     font-size: 29px;
     z-index: 999;
 }
@@ -333,7 +288,7 @@ button {
 
 .logout-button {
     position: absolute;
-    background-color: #38444d;
+    background-color: red;
     color: #fff;
     border-radius: 1px;
     padding: 13px 16px;
@@ -341,8 +296,8 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
     z-index: 9999;
-    bottom: 8px;
-    right: 80px;
+    bottom: 2px;
+    /* right: 80px; */
 }
 
 .logout-button:hover {
@@ -354,12 +309,12 @@ button {
     position: absolute;
     top: 3px;
     right: 5px;
-    padding: 15px 25px;
-    font-size: 20px;
+    padding: 10px 15px;
+    font-size: 17px;
     background-color: #5aa4dddc;
     color: #fff;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
     z-index: 1;
@@ -368,38 +323,97 @@ button {
 }
 
 .settings-page {
-    position: fixed;
-    top: 72px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 8px;
-    padding: 100px 60px;
-    text-align: center;
-    z-index: 9999;
-  }
-  
-  .settings-page h2 {
-    margin-top: 0;
-    font-size: 32px;
-  }
-  
-  .settings-page ol {
-    list-style-type: none;
-    padding: 0;
-    font-size: 24px;
-  }
-  
-  .settings-page li {
-    margin-bottom: 22px;
-    display: block;
-  }
-  
-  .settings-page li input[type="checkbox"] {
-    margin-right: 15px;
-    transform: scale(2);
-  }
-  
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 8px;
+  padding: 100px 60px;
+  text-align: center;
+  z-index: 9999;
+}
+
+.settings-page h2 {
+  margin-top: 0;
+  font-size: 32px;
+}
+
+.settings-page ol {
+  list-style-type: none;
+  padding: 0;
+  font-size: 24px;
+}
+
+.settings-page li {
+  margin-bottom: 22px;
+  display: block;
+}
+
+.settings-page li input[type="checkbox"] {
+  margin-right: 15px;
+  transform: scale(2);
+}
+
+
+/* Style the toggle switch (checkbox) */
+.settings-page .toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.settings-page .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-page .toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #777;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+.settings-page .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.settings-page input:checked + .toggle-slider {
+  background-color: #06D6A0;
+}
+
+.settings-page input:focus + .toggle-slider {
+  box-shadow: 0 0 1px #06D6A0;
+}
+
+.settings-page input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.settings-page .toggle-slider.round {
+  border-radius: 24px;
+}
+
+.settings-page .toggle-slider.round:before {
+  border-radius: 50%;
+}
+
  
 /* Heading and logo styling */
 .headname {
@@ -543,6 +557,10 @@ body.dark-mode {
 .dark-mode .image-gallery img {
     border-radius: 5px;
 }
+.dark-mode .image-gallery  {
+    background-color: #333;
+}
+
 
 .dark-mode .no-images {
     color: #eb1010;
@@ -649,8 +667,7 @@ body.dark-mode {
           <li><a href="contact.php">Contact</a></li>
           <li><a class="active" href="">Details</a></li>
           <li><a href="about.php">About</a></li>
-          <li style="float:left"><button class="logout-button"
-              onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
+          
           <li class="dropdown" style="float:right">
             <button class="settings-button" class="settings-btn" onclick="openSettings()"><i class="fas fa-cog"></i>
             </button>
@@ -664,7 +681,12 @@ body.dark-mode {
 <ol>
   <li>
     <label>
-      <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode
+    <div class="toggle-switch">
+  <input type="checkbox" name="darkMode" id="darkModeToggle" onclick="toggleDarkMode()">
+  <span class="toggle-slider round"></span>
+</div>
+dark mode
+      <!-- <input type="checkbox" name="darkMode" onclick="toggleDarkMode()" checked> Dark Mode -->
     </label>
 
   </li>
@@ -680,7 +702,10 @@ body.dark-mode {
     </label>
 
   </li>
+  <label>
+  <li style="float:left"><button class="logout-button" onclick="window.location.href = 'index.php?logout=true'">Log out</button></li>
   <li>
+                    </label>
     <label>
       <span class="return-button" onclick="closeSettings()">&times;</span>
     </label>
@@ -689,5 +714,17 @@ body.dark-mode {
     </div>
 
     <!--completed the project-->
+    <script>
+        function openSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'block';
+}
+
+function closeSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'none';
+}
+
+        </script>
 </body>
 </html>

@@ -396,7 +396,7 @@ button.return-button {
   position: absolute;
   top: 20px;
   left: 5px;
-  padding: 20px 35px;
+  padding: 15px 25px;
   font-size: 20px;
   background-color: #5aa4dddc;
   color: #fff;
@@ -1219,6 +1219,16 @@ a{
     window.onload = function() {
         hideAlerts();
     };
+    function openSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'block';
+}
+
+function closeSettings() {
+  var settingsPage = document.querySelector('.settings-page');
+  settingsPage.style.display = 'none';
+}
+
 </script>
 
 </body>
