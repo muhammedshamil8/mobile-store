@@ -189,7 +189,7 @@ $conn->close();
   <link rel="icon" href="image/mobilelogo77.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="page3.css">
+    <!-- <link rel="stylesheet" type="text/css" href="page3.css"> -->
     <script src="page3.js"></script>
     <script>
     // Function to go back to the previous page
@@ -197,6 +197,357 @@ $conn->close();
       window.history.back();
     }
   </script>
+  <style>
+    /* page3.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #949398ff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Common styles for navigation bar */
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #38444d;
+    padding: 2px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+    font-size: 15px;
+    /* why */
+}
+
+.container {
+    max-width: 100%;
+    padding: 5px;
+    margin: 0;
+}
+
+/* Reset default list styles and add common styles for navigation bar */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #38444d;
+}
+
+li {
+    float: left;
+}
+
+li a,
+.dropbtn {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.li1 {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+
+li a:hover:not(.active),
+.dropdown:hover .dropbtn {
+    background-color: #111;
+    /* color: #45a049; */
+    color: #fff;
+}
+
+.active {
+    background-color: #04AA6D;
+    padding: 14px 16px;
+    color: #fff;
+}
+.active:hover{
+    color: #000000;
+}
+/* Styles for dropdown menu */
+li.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    color: #45a049;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Buttons styling */
+button {
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.settings-button {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+    background-color: #38444d;
+    color: #fff;
+    border-radius: 0px;
+    padding: 5px 23px;
+    font-size: 29px;
+    z-index: 999;
+}
+
+.settings-button:hover {
+    background-color: #1393c5;
+}
+
+.logout-button {
+    position: absolute;
+    background-color: #38444d;
+    color: #fff;
+    border-radius: 1px;
+    padding: 13px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 9999;
+    bottom: 8px;
+    right: 80px;
+}
+
+.logout-button:hover {
+    background-color: darkred;
+}
+/* Add responsive styles for the settings page */
+
+.return-button {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    padding: 15px 25px;
+    font-size: 20px;
+    background-color: #5aa4dddc;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center; 
+}
+
+.settings-page {
+    position: fixed;
+    top: 72px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 8px;
+    padding: 100px 60px;
+    text-align: center;
+    z-index: 9999;
+  }
+  
+  .settings-page h2 {
+    margin-top: 0;
+    font-size: 32px;
+  }
+  
+  .settings-page ol {
+    list-style-type: none;
+    padding: 0;
+    font-size: 24px;
+  }
+  
+  .settings-page li {
+    margin-bottom: 22px;
+    display: block;
+  }
+  
+  .settings-page li input[type="checkbox"] {
+    margin-right: 15px;
+    transform: scale(2);
+  }
+  
+ 
+/* Heading and logo styling */
+.headname {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(226, 223, 231);
+}
+
+.headname h1 {
+    font-size: 32px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0;
+}
+
+.headname img {
+    max-height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid;
+}
+
+/* Contact form styling */
+.contact-form {
+    background-color: #f7f4f4;
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 800px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+
+.contact-form h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+}
+
+.form-group textarea {
+    height: 120px;
+}
+
+.form-group button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.form-group button:hover {
+    background-color: #45a049;
+}
+
+.form-group button b {
+    background-color: #134cc7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+/* Image gallery styling */
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    color: #000000;
+    background-color: #f7f4f4;
+    padding: 20px;
+}
+
+.image-gallery img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.no-images {
+    text-align: center;
+    color: #0b1233;
+}
+
+/* Dark mode styling */
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .headname {
+    background-image: linear-gradient(to right, rgb(25, 25, 194), rgb(62, 183, 204));
+    color: #fff;
+}
+
+.dark-mode .btn-back {
+    background-color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.dark-mode .contact-form,
+.dark-mode .form-group input,
+.dark-mode .form-group textarea,
+.dark-mode .form-group label,
+.dark-mode .form-group button {
+    color: #fff;
+    background-color: #0c0a0a;
+    border-color: #c09292;
+}
+
+.dark-mode .form-group button {
+    background-color: #45a049;
+}
+
+.dark-mode .image-gallery img {
+    border-radius: 5px;
+}
+
+.dark-mode .no-images {
+    color: #eb1010;
+}
+    </style>
 </head>
 
 <body>
