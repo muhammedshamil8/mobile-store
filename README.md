@@ -9,6 +9,7 @@
 - users can create and update the product details > img , description etc...!
 - User can search the product name from home page then filter and see similair search query  inside every gorup.
 - users can search inside group also to filter the product.
+
  **And actually this made for a business use of my big brother** . 
 * mobile-parts business  
 * so store group means combany and product is product name then he can easily filter when get a enqury  then search and filter similar product from differnet comabny and all etc ...!
