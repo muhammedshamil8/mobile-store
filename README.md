@@ -1,20 +1,21 @@
 # Mobile-Store
-### ashii : give this work for store all data and when search it want to get ;
 
-#### project = mobile-store 
-- step 1: create two pages for group and product
-- step 2: connect to databse input  and show on page table 
-- step 3: open button and delte button create 
-- step 4: Opening a specific group
-- step 5:Searching for similar product names on main page 
-- step 6: styled the pages with beutiful color and setted dark mode 
-- step 7: add new page for details of product
-- step 8: add image upload/remove/edit option 
-- step 9: Finally Completed The project ;
-- step 10: modified by lots of ideas
+###  store all data  : -  **product names and its details you can separte it from different group and you can search product name  to get fast and view details;**
+
+#### features 
+- Users can create account for store their data.
+- user can create groups. like a folder
+- users can create product inside each group 
+- users can create and update the product details > img , description etc...!
+- User can search the product name from home page then filter and see similair search query  inside every gorup.
+- users can search inside group also to filter the product.
+- ** And actually this made for a business use of my big brother ** . 
+* mobile-parts business  
+* so store group means combany and product is product name then he can easily filter when get a enqury  then search and filter similar product from differnet comabny and all etc ...!
+
 
 - project completed 98%
-- ....updation loading
+- my first full stack project ... somuch need to improve -_- i know ..! i didnt come back after studying new stuffs i run forward with new projects 
 
 ## Test demo locally
 ```sh
